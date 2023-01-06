@@ -123,7 +123,7 @@ def search_all_file(file_dir=os.getcwd(), target_suffix_tuple=()):
 
     Args:
         file_dir (str): 文件目录
-        target_suffix_tuple (str): 文件目录
+        target_suffix_tuple (Tuple(Str)): 文件目录
 
     Returns:
         list : 文件路径列表
@@ -137,14 +137,15 @@ def search_all_file(file_dir=os.getcwd(), target_suffix_tuple=()):
         file_path = "{}{}{}".format(os.getcwd(), os.path.sep, file_name)
         # 判断是否为目录，是往下递归
         if os.path.isdir(file_path):
-            print("[-]", file_path)
+            # print("[-]", file_path)
             file_list.extend(search_all_file(file_path, target_suffix_tuple))
             os.chdir(os.pardir)
         elif target_suffix_tuple is not None and file_name.endswith(target_suffix_tuple):
-            print("[!]", file_path)
+            # print("[!]", file_path)
             file_list.append(file_path)
         else:
-            print("[+]", file_path)
+            pass
+            # print("[+]", file_path)
     return file_list
 
 

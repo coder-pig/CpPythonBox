@@ -112,3 +112,6 @@ ENV/
 /wash/in.html
 /wash/out.html
 /temp/
+/markdown/local_md/
+/markdown/origin_md/
+/markdown/server_md/
