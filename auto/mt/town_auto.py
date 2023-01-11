@@ -181,16 +181,21 @@ def receive_rewards_detail():
     return have_task_flag
 
 
-if __name__ == '__main__':
-    is_dir_existed(temp_dir, is_recreate=True)
-    init()
+# 打开APP进入美团小镇
+def to_mt_town():
     start_app(mt_pkg_name)
     sleep(2)
     click_area(856, 2030, 1068, 2160)  # 点击我的
     sleep(3)
     click_area(637, 1399, 835, 1558)  # 点击美团小镇
     sleep(3)
+
+
+if __name__ == '__main__':
+    is_dir_existed(temp_dir, is_recreate=True)
+    init()
+    # to_mt_town()
+    # 一直投骰子
     roll()
     # 骰子都用完了，可以领取奖励，然后再roll
     # receive_rewards()
-    # roll()
