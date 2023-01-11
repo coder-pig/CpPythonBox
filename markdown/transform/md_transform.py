@@ -6,7 +6,7 @@
    Author   : CoderPig
    date     : 2023-01-06 14:44 
    Desc     : md文件转换
-            使用方法：将要转换的md文件放到origin_md目录下，然后运行即可自动转换
+            使用方法：将要转换的md文件放到 origin_md 目录下，然后运行即可自动转换
             如果用到生成doc的功能，需要电脑先安装一下pandoc，下载地址：https://github.com/jgm/pandoc/releases
 -------------------------------------------------
 """

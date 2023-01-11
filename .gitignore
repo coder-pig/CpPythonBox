@@ -115,3 +115,6 @@ ENV/
 /markdown/local_md/
 /markdown/origin_md/
 /markdown/server_md/
+/markdown/md_to_wx/article
+/markdown/md_to_wx/wash/in.html
+/markdown/md_to_wx/wash/out.html
