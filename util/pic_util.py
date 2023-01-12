@@ -27,6 +27,7 @@ def get_picture_size(pic_path):
 def crop_area(pic_path, save_dir, start_x, start_y, end_x, end_y):
     """
     裁剪图片
+    :param save_dir: 保存路径
     :param pic_path: 图片路径
     :param start_x: x轴起始坐标
     :param start_y: y轴起始坐标
