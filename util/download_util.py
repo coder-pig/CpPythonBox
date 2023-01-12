@@ -8,9 +8,15 @@
    Desc     : 下载工具类
 -------------------------------------------------
 """
-from aiohttp_requests import requests
-import aiofiles
+
 import os
+import time
+
+import aiofiles
+import requests as r
+from aiohttp_requests import requests
+from idm import IDMan
+from you_get import common as you_get
 
 from util.logger_util import default_logger
 
@@ -43,3 +49,31 @@ async def download_pic(pic_path, url, headers=None):
             logger.info("图片链接格式不正确：%s - %s" % (pic_path, url))
     except Exception as e:
         logger.info("下载异常：{}\n{}".format(url, e))
+
+
+def request_download_video(url, headers, video_path, file_type, title=''):
+    logger.info("下载：%s" % url)
+    file_name = '{}{}{}_{}.{}'.format(video_path, os.path.sep, title, str(int(round(time.time() * 1000))),
+                                      file_type)
+    resp = r.get(url=url, headers=headers)
+    with open(file_name, "wb+") as f:
+        f.write(resp.content)
+        logger.info("下载完成：%s" % resp.url)
+    return file_name
+
+
+# you-get下载视频
+def you_get_download_video(video_url, output_dir, cookie_file=None):
+    if cookie_file is not None and os.path.exists(cookie_file):
+        you_get.load_cookies(cookie_file)
+    you_get.any_download(url=video_url, info_only=False, output_dir=output_dir, merge=True)
+
+
+# IDM下载文件
+def download_idm(url, referer_url, output_dir, file_type, title=''):
+    logger.info("下载：%s" % url)
+    file_name = '{}_{}.{}'.format(title, str(int(round(time.time() * 1000))), file_type)
+    downloader = IDMan()
+    downloader.download(url, path_to_save=output_dir, output=file_name, referrer=referer_url)
+    logger.info("下载完成：%s" % url)
+    return os.path.join(output_dir, file_name)

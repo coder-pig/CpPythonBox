@@ -92,6 +92,9 @@ def roll():
         is_blind_box_list = []
         is_treasury = None
         is_not_roll_area = None
+        continue_game = None
+        confirm = None
+        receive = None
         for result in ocr_result_dict.keys():
             if "解锁" in result:
                 is_browser_10s_area = ocr_result_dict[result]
@@ -110,6 +113,12 @@ def roll():
                 is_treasury = ocr_result_dict[result]
             elif "不足" in result:
                 is_not_roll_area = ocr_result_dict[result]
+            elif "继续游戏" in result:
+                continue_game = ocr_result_dict[result]
+            elif "确定" in result:
+                confirm = ocr_result_dict[result]
+            elif "领取" in result:
+                receive = ocr_result_dict[result]
         if is_browser_10s_area:
             logger.info("执行浏览10s任务")
             click_area(*is_browser_10s_area)
@@ -139,6 +148,21 @@ def roll():
             sleep(1)
             click_area(451, 1458, 630, 1555)
             sleep(2)
+            continue
+        if continue_game:
+            logger.info("被暴击狗盯上了，继续游戏")
+            click_area(*continue_game)
+            sleep(11)
+            key_event(KeyCode.BACK)
+            sleep(1)
+            continue
+        if confirm:
+            logger.info("发现确定按钮，点击")
+            click_area(*confirm)
+            continue
+        if receive:
+            logger.info("发现领取按钮，点击")
+            click_area(*receive)
             continue
         logger.info("匹配不到任务类型")
 
