@@ -165,6 +165,14 @@ def read_file_text_content(file_path):
             return f.read()
 
 
+def read_file_content(file_path):
+    if not os.path.exists(file_path):
+        return None
+    else:
+        with open(file_path, 'rb+') as f:
+            return f.read()
+
+
 def write_text_to_file(content, file_path, mode="w+"):
     """ 将文字写入到文件中
 

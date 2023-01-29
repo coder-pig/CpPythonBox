@@ -113,7 +113,7 @@ def roll():
                 is_treasury = ocr_result_dict[result]
             elif "不足" in result:
                 is_not_roll_area = ocr_result_dict[result]
-            elif "继续游戏" in result:
+            elif "游戏" in result:
                 continue_game = ocr_result_dict[result]
             elif "确定" in result:
                 confirm = ocr_result_dict[result]

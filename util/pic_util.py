@@ -10,8 +10,8 @@
 """
 import os
 import time
-
-from PIL import Image
+import numpy as np
+from PIL import Image, ImageDraw
 
 
 def get_picture_size(pic_path):
@@ -53,7 +53,7 @@ def resize_picture(pic_path, width, height):
     """
     img = Image.open(pic_path)
     resized_img = img.resize((width, height), Image.ANTIALIAS)
-    save_path = os.path.join(os.getcwd(), "resized_" + str(round(time.time() * 1000)) + ".jpg")
+    save_path = os.path.join(os.getcwd(), "resized_" + str(round(time.time() * 1000)) + ".png")
     resized_img.save(save_path)
     return save_path
 
@@ -67,7 +67,7 @@ def resize_picture_percent(pic_path, percent):
     """
     img = Image.open(pic_path)
     resized_img = img.resize((int(img.width * percent), int(img.height * percent)), Image.ANTIALIAS)
-    save_path = os.path.join(os.getcwd(), "resized_" + str(round(time.time() * 1000)) + ".jpg")
+    save_path = os.path.join(os.getcwd(), "resized_" + str(round(time.time() * 1000)) + ".png")
     resized_img.save(save_path)
     return save_path
 
@@ -81,29 +81,36 @@ def picture_to_gray(pic_path, save_dir):
     """
     img = Image.open(pic_path)
     gray_img = img.convert('L')
-    save_path = os.path.join(save_dir, "gray_" + str(round(time.time() * 1000)) + ".jpg")
+    save_path = os.path.join(save_dir, "gray_" + str(round(time.time() * 1000)) + ".png")
     gray_img.save(save_path)
     return save_path
 
 
-def picture_to_black_white(pic_path, save_dir):
+def picture_to_black_white(pic_path, save_dir, threshold=127):
     """
     图片二值化(黑白)
     :param save_dir:
     :param pic_path: 图片路径
+    :param threshold:  灰度阈值，默认127
     :return: 转换后的图片路径
     """
     img = Image.open(pic_path)
-    gray_img = img.convert('1')
-    save_path = os.path.join(save_dir, "bw_" + str(round(time.time() * 1000)) + ".jpg")
-    gray_img.save(save_path)
+    save_path = os.path.join(save_dir, "bw_" + str(round(time.time() * 1000)) + ".png")
+    if threshold == 127:
+        img.convert('1').save(save_path)
+    else:
+        img.convert('L').point([0 if x < threshold else 1 for x in range(256)], '1').save(save_path)
     return save_path
+
+
+def t2val(value, threshold):
+    return 0 if value < threshold else 1
 
 
 if __name__ == '__main__':
     print(get_picture_size('test_ocr.jpg'))
-    print(crop_area('test_ocr.jpg', 0, 0, 100, 200))
+    print(crop_area('test_ocr.jpg', os.getcwd(), 0, 0, 100, 200))
     print(resize_picture('test_ocr.jpg', 300, 600))
     print(resize_picture_percent('test_ocr.jpg', 0.5))
-    print(picture_to_gray('test_ocr.jpg'))
-    print(picture_to_black_white('test_ocr.jpg'))
+    print(picture_to_gray('test_ocr.jpg', os.getcwd()))
+    print(picture_to_black_white('test_ocr.jpg', os.getcwd()))

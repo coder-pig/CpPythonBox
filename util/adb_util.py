@@ -149,6 +149,10 @@ def click_xy(x, y):
     return start_cmd('adb shell input tap %d %d' % (x, y))
 
 
+def long_click_xy(x, y, duration):
+    return start_cmd('adb shell input swipe %d %d %d %d %d' % (x, y, x + 1, y + 1, duration))
+
+
 def click_area(left, top, right, bottom):
     """
     传入左上右下坐标点，默认点击中间区域
@@ -159,6 +163,17 @@ def click_area(left, top, right, bottom):
     :return:
     """
     click_xy(int((left + right) / 2), int((top + bottom) / 2))
+
+
+def long_click(x, y, duration):
+    """
+    长按坐标点 (滑动模拟实现，当两坐标点差值足够小，Android系统就会认为我们进行了长按某个按钮的操作)
+    :param x:
+    :param y:
+    :param duration: 长按的时长，单位毫秒
+    :return:
+    """
+    return start_cmd("adb shell input swipe %d %d %d %d %d" % (x, y, x + 1, y + 1, duration))
 
 
 def screenshot(save_dir=None):

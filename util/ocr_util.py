@@ -12,6 +12,9 @@
 import socket
 import requests as r
 from collections import OrderedDict
+from aip import AipOcr
+
+from util.file_util import read_file_text_content, read_file_content
 
 local_ocr_base_url = "http://{}:8089".format(socket.gethostbyname(socket.gethostname()))
 local_ocr_tr_run_url = local_ocr_base_url + "/api/tr-run/"
@@ -32,3 +35,26 @@ def extract_text(origin_data_dict):
         return text_dict
     else:
         print("Json数据解析异常")
+
+
+class BaiDuOCR:
+    def __init__(self):
+        self.APP_ID = "xxx"
+        self.API_KEY = "xxx"
+        self.SECRET_KEY = "xxx"
+        self.client = AipOcr(self.APP_ID, self.API_KEY, self.SECRET_KEY)
+
+    def general(self, pic_path):
+        orc_result = self.client.basicGeneral(read_file_content(pic_path))
+        if orc_result is not None:
+            print("识别结果：" + str(orc_result))
+            # 直接拿，就不判断了，反正识别错误就抛出异常
+            return orc_result["words_result"][0]['words']
+        else:
+            print("识别失败")
+            raise Exception("识别失败异常")
+
+
+if __name__ == '__main__':
+    ocr = BaiDuOCR()
+    ocr.general("c2.jpg")
