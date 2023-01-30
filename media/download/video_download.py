@@ -17,7 +17,7 @@ from http import cookiejar
 
 import requests as r
 
-from util.download_util import request_download_video, download_idm, you_get_download_video, merge_mp4_wav
+from util.download_util import request_download_file, download_idm, you_get_download_video
 from util.file_util import is_dir_existed
 from util.logger_util import default_logger
 
@@ -222,10 +222,10 @@ if __name__ == '__main__':
                         after_video_path = os.path.join(video_dir, '{}_after.{}'.format(choose_video.title, 'mp4'))
                         if download_type_choose == 0:
                             headers['Referer'] = input_url
-                            b_video_path = request_download_video(bv_video_url, headers, temp_dir, 'mp4',
-                                                                  choose_video.title)
-                            b_audio_path = request_download_video(bv_audio_url, headers, temp_dir, 'mp4',
-                                                                  choose_video.title)
+                            b_video_path = request_download_file(bv_video_url, headers, temp_dir, 'mp4',
+                                                                 choose_video.title)
+                            b_audio_path = request_download_file(bv_audio_url, headers, temp_dir, 'mp4',
+                                                                 choose_video.title)
                             logger.info("音视频下载完毕，准备合并")
                             merge_mp4_wav(b_video_path, b_audio_path, after_video_path)
                         elif download_type_choose == 1:

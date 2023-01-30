@@ -10,23 +10,45 @@
 """
 
 import socket
-import requests as r
 from collections import OrderedDict
+import requests as r
 from aip import AipOcr
+from urllib3.exceptions import NewConnectionError
 
-from util.file_util import read_file_text_content, read_file_content
+from config_getter import get_config
+from util.file_util import read_file_content
+from util.logger_util import default_logger
 
+logger = default_logger()
+
+# 本地OCR相关
 local_ocr_base_url = "http://{}:8089".format(socket.gethostbyname(socket.gethostname()))
 local_ocr_tr_run_url = local_ocr_base_url + "/api/tr-run/"
 
+# 百度OCR相关
+bd_ocr_client = AipOcr(get_config("bd_ocr_app_id"), get_config("bd_ocr_api_key"), get_config("bd_ocr_secret_key"))
+
 
 def picture_local_ocr(pic_path):
+    """
+    图片本地OCR
+    :param pic_path: 待识别图片路径
+    :return: 识别结果，返回字典(文字：文字区域)
+    """
     upload_files = {'file': open(pic_path, 'rb'), 'compress': 960}
-    resp = r.post(local_ocr_tr_run_url, files=upload_files)
-    return extract_text(resp.json())
+    try:
+        resp = r.post(local_ocr_tr_run_url, files=upload_files)
+        return extract_text(resp.json())
+    except (NewConnectionError, r.exceptions.ConnectionError):
+        logger.error("连接本地OCR服务异常，请检测本地服务是否启动？")
 
 
 def extract_text(origin_data_dict):
+    """
+    解析识别结果的方法
+    :param origin_data_dict: 本地OCR识别结果
+    :return:
+    """
     text_dict = OrderedDict()
     raw_out = origin_data_dict['data']['raw_out']
     if raw_out is not None:
@@ -34,27 +56,24 @@ def extract_text(origin_data_dict):
             text_dict[raw[1]] = (raw[0][0][0], raw[0][0][1], raw[0][1][0], raw[0][2][1])
         return text_dict
     else:
-        print("Json数据解析异常")
+        logger.info("Json数据解析异常")
 
 
-class BaiDuOCR:
-    def __init__(self):
-        self.APP_ID = "xxx"
-        self.API_KEY = "xxx"
-        self.SECRET_KEY = "xxx"
-        self.client = AipOcr(self.APP_ID, self.API_KEY, self.SECRET_KEY)
-
-    def general(self, pic_path):
-        orc_result = self.client.basicGeneral(read_file_content(pic_path))
-        if orc_result is not None:
-            print("识别结果：" + str(orc_result))
-            # 直接拿，就不判断了，反正识别错误就抛出异常
-            return orc_result["words_result"][0]['words']
-        else:
-            print("识别失败")
-            raise Exception("识别失败异常")
+def bd_ocr_general(pic_path):
+    """
+    百度OCR识别
+    :param pic_path:
+    :return:
+    """
+    orc_result = bd_ocr_client.basicGeneral(read_file_content(pic_path))
+    if orc_result is not None:
+        logger.info("识别结果：{}".format(orc_result))
+        # 直接拿，就不判断了，反正识别错误就抛出异常
+        return orc_result["words_result"][0]['words']
+    else:
+        logger.info("识别失败")
+        raise Exception("识别失败异常")
 
 
 if __name__ == '__main__':
-    ocr = BaiDuOCR()
-    ocr.general("c2.jpg")
+    print(picture_local_ocr("c1.png"))

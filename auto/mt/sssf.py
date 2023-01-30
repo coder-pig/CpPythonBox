@@ -13,9 +13,8 @@ import re
 from util.adb_util import screenshot, click_area, sleep, click_xy, long_click_xy
 from util.file_util import get_temp_save_root_path, is_dir_existed
 from util.logger_util import default_logger
-from util.ocr_util import picture_local_ocr, BaiDuOCR
+from util.ocr_util import picture_local_ocr
 from util.pic_util import *
-import webbrowser
 
 logger = default_logger()
 temp_dir = get_temp_save_root_path()
@@ -258,8 +257,8 @@ def auto_spring_answer():
 
 if __name__ == '__main__':
     is_dir_existed(temp_dir, is_recreate=True)
-    # for i in range(0, 50):
-    #     auto_bridge_old()
-    #     time.sleep(3)
+    for i in range(0, 60):
+        auto_bridge_old()
+        time.sleep(3)
     # auto_pk()
-    auto_spring_answer()
+    # auto_spring_answer()

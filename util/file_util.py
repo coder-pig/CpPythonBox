@@ -41,12 +41,21 @@ def is_dir_existed(file_path, mkdir=True, is_recreate=False):
 
 
 def get_root_path(project_name):
+    """
+    获得项目的根路径
+    :param project_name:
+    :return:
+    """
     cur_path = os.path.abspath(os.path.dirname(__file__))
     root_path = cur_path[:cur_path.find(project_name) + len(project_name)]
     return root_path
 
 
 def get_temp_save_root_path():
+    """
+    获得暂存文件的保存路径
+    :return:
+    """
     return os.path.join(get_root_path("CpPythonBox"), "temp")
 
 
@@ -166,6 +175,11 @@ def read_file_text_content(file_path):
 
 
 def read_file_content(file_path):
+    """
+    以二进制的形式读取文件
+    :param file_path:
+    :return:
+    """
     if not os.path.exists(file_path):
         return None
     else:
@@ -248,14 +262,15 @@ def get_str_md5(content):
 
 
 def copy_file(src_file, dst_file):
+    """
+    复制文件
+    :param src_file: 源文件
+    :param dst_file: 复制后的文件
+    :return:
+    """
     f_path, f_name = os.path.split(dst_file)
     is_dir_existed(f_path)
     shutil.copyfile(src_file, dst_file)
-
-
-def get_file_content(file_path):
-    with open(file_path, 'rb') as fp:
-        return fp.read()
 
 
 if __name__ == '__main__':

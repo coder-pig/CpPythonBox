@@ -21,7 +21,7 @@ temp_dir = get_temp_save_root_path()
 # 浏览10s
 def browser_10s():
     sleep(11)
-    key_event(KeyCode.BACK)
+    key_event(KeyEvent.BACK)
     sleep(1)
     click_area(470, 1324, 611, 1403)
 
@@ -153,7 +153,7 @@ def roll():
             logger.info("被暴击狗盯上了，继续游戏")
             click_area(*continue_game)
             sleep(11)
-            key_event(KeyCode.BACK)
+            key_event(KeyEvent.BACK)
             sleep(1)
             continue
         if confirm:

@@ -8,20 +8,20 @@
    Desc     : 
 -------------------------------------------------
 """
-import subprocess
-import re
-from enum import Enum
-import time
 import os
-from lxml import etree
+import re
+import subprocess
+import time
 from enum import Enum
+from lxml import etree
 from util.logger_util import default_logger
+from util.os_util import is_win, is_mac
 
 connect_device_pattern = re.compile("\n(.*?)\tdevice", re.S)  # 匹配设备的正则
 pkg_act_pattern = re.compile(".* (.*?)/(.*?) ", re.S)  # 获取包名和Activity名的正则
 chinese_pattern = re.compile("[\u4e00-\u9fa5]", re.S)  # 筛选中文的正则
 size_pattern = re.compile(r"(\d+)x(\d+)", re.S)  # 获取屏幕尺寸的正则
-bounds_pattern = re.compile(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]")
+bounds_pattern = re.compile(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]")  # 匹配控件区域的正则
 t = time.time()
 logger = default_logger()
 
@@ -33,10 +33,11 @@ class KeyEvent(Enum):
     HOME = 3
     BACK = 4
     POWER = 26
+    DELETE = 67
+    MENU = 82
     SCREEN_ON = 224
     SCREEN_OFF = 223
     SWITCH_APP = 187
-    DELETE = 67
 
 
 def start_cmd(cmd):
@@ -46,7 +47,7 @@ def start_cmd(cmd):
     :return: 执行后的输出结果列表
     """
     logger.info(cmd)
-    proc = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE)
+    proc = subprocess.Popen(cmd, shell=is_mac(), stdout=subprocess.PIPE)
     output_content = ""
     for result in proc.stdout.readlines():
         output_content += result.decode("utf-8")
@@ -107,12 +108,6 @@ def key_event(event):
     return start_cmd('adb shell input keyevent %d' % event.value)
 
 
-class KeyCode(Enum):
-    HOME = 3
-    MENU = 82
-    BACK = 4
-
-
 def input_text(text):
     """
     当焦点处于某文本框时，模拟输入文本
@@ -142,38 +137,49 @@ def swipe(start_x, start_y, end_x, end_y):
 def click_xy(x, y):
     """
     点击坐标点
-    :param x:
-    :param y:
+    :param x: x坐标
+    :param y: y坐标
     :return:
     """
     return start_cmd('adb shell input tap %d %d' % (x, y))
 
 
 def long_click_xy(x, y, duration):
+    """
+    长按坐标点 (滑动模拟实现，当两坐标点差值足够小，Android系统就会认为我们进行了长按某个按钮的操作)
+    :param x: x坐标
+    :param y: y坐标
+    :param duration: 长按时长，单位毫秒
+    :return:
+    """
     return start_cmd('adb shell input swipe %d %d %d %d %d' % (x, y, x + 1, y + 1, duration))
 
 
 def click_area(left, top, right, bottom):
     """
     传入左上右下坐标点，默认点击中间区域
-    :param left:
-    :param top:
-    :param right:
-    :param bottom:
+    :param left: 左侧坐标
+    :param top: 顶部坐标
+    :param right: 右侧坐标
+    :param bottom: 底部坐标
     :return:
     """
     click_xy(int((left + right) / 2), int((top + bottom) / 2))
 
 
-def long_click(x, y, duration):
+def long_click_area(left, top, right, bottom, duration):
     """
-    长按坐标点 (滑动模拟实现，当两坐标点差值足够小，Android系统就会认为我们进行了长按某个按钮的操作)
-    :param x:
-    :param y:
-    :param duration: 长按的时长，单位毫秒
+    长按某个区域，默认点击中间区域
+    :param left: 左侧坐标
+    :param top: 顶部坐标
+    :param right: 右侧坐标
+    :param bottom: 底部坐标
+    :param duration: 长按时长，单位毫秒
     :return:
     """
-    return start_cmd("adb shell input swipe %d %d %d %d %d" % (x, y, x + 1, y + 1, duration))
+    x = int((left + right) / 2)
+    y = int((top + bottom) / 2)
+    return start_cmd('adb shell input swipe %d %d %d %d %d' % (x, y, x + 1, y + 1, duration))
 
 
 def screenshot(save_dir=None):
@@ -199,6 +205,11 @@ def screen_size():
 
 
 def sleep(second):
+    """
+    进程休眠多少秒，支持小数，比如0.1就是100毫秒
+    :param second: 休眠时长，单位秒
+    :return:
+    """
     time.sleep(second)
 
 
