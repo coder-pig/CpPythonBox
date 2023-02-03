@@ -39,7 +39,6 @@ def crop_area(pic_path, save_dir, start_x, start_y, end_x, end_y):
     region = img.crop((start_x, start_y, end_x, end_y))
     save_path = os.path.join(save_dir, "crop_" + str(round(time.time() * 1000)) + ".png")
     region.save(save_path)
-    print(save_path)
     return save_path
 
 
@@ -105,6 +104,41 @@ def picture_to_black_white(pic_path, save_dir, threshold=127):
 
 def t2val(value, threshold):
     return 0 if value < threshold else 1
+
+
+def join_two_picture(first_pic, second_pic, save_dir, space=0, flag='horizontal'):
+    """
+    拼接两个图片
+    :param first_pic: 第一张图片
+    :param second_pic: 第二章图片
+    :param save_dir: 生成图片保存目录
+    :param space: 两个图片的间距
+    :param flag: 水平拼接还是垂直拼接
+    :return:
+    """
+    first_img = Image.open(first_pic)
+    second_img = Image.open(second_pic)
+    save_path = os.path.join(save_dir, "join_" + str(round(time.time() * 1000)) + ".png")
+    first_size, second_size = first_img.size, second_img.size
+    if flag == 'horizontal':
+        join_img = Image.new("RGB", (
+            first_size[0] + second_size[0] + space,
+            first_size[1] if first_size[1] > second_size[1] else second_size[1]))
+        first_loc, second_loc = (0, 0), (first_size[0] + space, 0)
+        join_img.paste(first_img, first_loc)
+        join_img.paste(second_img, second_loc)
+        join_img.save(save_path)
+        return save_path
+    elif flag == "vertical":
+        join_img = Image.new("RGB", (
+            first_size[0] if first_size[0] > second_size[0] else second_size[0],
+            first_size[1] + second_size[1] + space))
+        first_loc, second_loc = (0, 0), (0, first_size[1] + space)
+        join_img.paste(first_img, first_loc)
+        join_img.paste(second_img, second_loc)
+        join_img.save(save_path)
+        return save_path
+    return None
 
 
 if __name__ == '__main__':

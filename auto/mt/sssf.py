@@ -10,6 +10,8 @@
 """
 import re
 
+from pyppeteer import launch
+
 from util.adb_util import screenshot, click_area, sleep, click_xy, long_click_xy
 from util.file_util import get_temp_save_root_path, is_dir_existed
 from util.logger_util import default_logger
@@ -19,7 +21,8 @@ from util.pic_util import *
 logger = default_logger()
 temp_dir = get_temp_save_root_path()
 pk_count_pattern = re.compile(r'次数.*?(\d+)')  # 获取挑战次数的正则
-number_pattern = re.compile(r'能力.*?(\d+\.\d)')  # 获取战力的正则
+number_pattern = re.compile(r'能力.*?(\d+\.\d)([万亿]{1})')  # 获取战力的正则
+chinese_pattern = re.compile(".*?([\u4e00-\u9fa5]+)", re.S)  # 筛选中文的正则
 
 
 # 自动PK
@@ -27,7 +30,7 @@ def auto_pk():
     while True:
         ocr_result_dict = picture_local_ocr(screenshot(temp_dir))
         pk_count = 0  # 剩余挑战次数
-        min_value = 100000  # 最低战力
+        min_value = -1  # 最低战力
         min_value_area = None  # 最小战力点击区域
         start_area = None  # 开始按钮
         for ocr_result in ocr_result_dict.keys():
@@ -43,8 +46,9 @@ def auto_pk():
             # 再筛最低战力
             number_result = number_pattern.search(ocr_result)
             if number_result:
-                power_value = float(number_result.group(1))
-                if min_value > power_value:
+                unit = number_result.group(2)
+                power_value = float(number_result.group(1)) * (10000 if unit == "亿" else 1)
+                if min_value < power_value < 20000:
                     min_value = power_value
                     min_value_area = ocr_result_dict[ocr_result]
         if start_area:
@@ -114,11 +118,11 @@ def edge_detection(origin_pic):
             point_x_list.append(border_x_list[pos - 1])
             point_x_list.append(border_x_list[pos])
     point_x_list.append(border_x_list[border_x_list_len - 1])  # 最后一个点肯定是右边缘
-    print(point_x_list)
+    logger.info(point_x_list)
     first_center_x = int((point_x_list[0] + point_x_list[1]) / 2)
     second_center_x = int((point_x_list[2] + point_x_list[3]) / 2)
     distance = second_center_x - first_center_x
-    print("第一个数字的中心x坐标为：{}，第二个数字的中心x坐标为：{}，得出木板的长度应为：{}".format(first_center_x, second_center_x, distance))
+    logger.info("第一个数字的中心x坐标为：{}，第二个数字的中心x坐标为：{}，得出木板的长度应为：{}".format(first_center_x, second_center_x, distance))
     return distance
 
 
@@ -191,6 +195,7 @@ def auto_bridge():
     long_click_xy(546, 1774, duration)
 
 
+# 孤岛求生自动跳桥(旧)
 def auto_bridge_old():
     bw_img = Image.open(
         picture_to_black_white(crop_area(screenshot(temp_dir), temp_dir, 0, 1262, 1080, 1336), temp_dir, 240))
@@ -232,33 +237,14 @@ def auto_bridge_old():
     # 求出距离
     distance = second_center_x - first_center_x - 70
     duration = int(float(distance / 86) * 100)
-    print("两者间距：{}，长按{}ms".format(distance, duration))
+    logger.info("两者间距：{}，长按{}ms".format(distance, duration))
     # 速度 7px/10ms   → 72px/100ms
     long_click_xy(546, 1774, duration)
 
 
-# 春节自动答题(对联)
-def auto_spring_answer():
-    answer_dict = {
-        "一": "四季财原顺意来、万事如意福临门", "四": "八节永平安", "山": "水清百鸟争春", "人": "思发在花前", "合": "内外平安好运来", "家": "春浓日暖花香",
-        "新": "佳年顺景财源来", "卯": "兔岁报新春", "爆": "春风送暖入屠苏、桃符万户更新", "时": "好花应时而开", "春": "岁月赋诗情、花信早传梅", "青": "绿水溢春华",
-        "绿": "红梅正报万家春"
-    }
-    print(picture_local_ocr(crop_area("c1.jpg", temp_dir, 50, 497, 201, 620)))
-
-    # ocr = BaiDuOCR()
-    # while True:
-    #     input()
-    #     orc_result = ocr.general(crop_area(screenshot(temp_dir), temp_dir, 44, 497, 194, 1403))
-    #     webbrowser.open("https://www.baidu.com/s?wd={}下一句".format(orc_result))
-    # crop_area("c2.jpg", temp_dir, 886, 505, 1032, 1396)
-    # crop_area("c2.jpg", temp_dir, 78, 1750, 1027, 2022)
-
-
 if __name__ == '__main__':
     is_dir_existed(temp_dir, is_recreate=True)
-    for i in range(0, 60):
-        auto_bridge_old()
-        time.sleep(3)
-    # auto_pk()
-    # auto_spring_answer()
+    # for i in range(0, 60):
+    #     auto_bridge_old()
+    #     time.sleep(3)
+    auto_pk()
