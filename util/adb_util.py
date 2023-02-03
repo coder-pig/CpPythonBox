@@ -134,14 +134,17 @@ def swipe(start_x, start_y, end_x, end_y):
     return start_cmd('adb shell input swipe %d %d %d %d' % (start_x, start_y, end_x, end_y))
 
 
-def click_xy(x, y):
+def click_xy(*args):
     """
     点击坐标点
     :param x: x坐标
     :param y: y坐标
     :return:
     """
-    return start_cmd('adb shell input tap %d %d' % (x, y))
+    if len(args) == 1:
+        return start_cmd('adb shell input tap %d %d' % (args[0][0], args[0][1]))
+    elif len(args) == 2:
+        return start_cmd('adb shell input tap %d %d' % (args[0], args[1]))
 
 
 def long_click_xy(x, y, duration):
@@ -155,7 +158,7 @@ def long_click_xy(x, y, duration):
     return start_cmd('adb shell input swipe %d %d %d %d %d' % (x, y, x + 1, y + 1, duration))
 
 
-def click_area(left, top, right, bottom):
+def click_area(*args):
     """
     传入左上右下坐标点，默认点击中间区域
     :param left: 左侧坐标
@@ -164,7 +167,10 @@ def click_area(left, top, right, bottom):
     :param bottom: 底部坐标
     :return:
     """
-    click_xy(int((left + right) / 2), int((top + bottom) / 2))
+    if len(args) == 1:
+        click_xy(int((args[0][0] + args[0][2]) / 2), int((args[0][1] + args[0][3]) / 2))
+    elif len(args) == 4:
+        click_xy(int((args[0] + args[2]) / 2), int((args[1] + args[3]) / 2))
 
 
 def long_click_area(left, top, right, bottom, duration):

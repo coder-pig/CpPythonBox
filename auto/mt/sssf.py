@@ -242,9 +242,79 @@ def auto_bridge_old():
     long_click_xy(546, 1774, duration)
 
 
+# 自动全球交易
+def auto_business():
+    order_point = (888, 188)  # 订单红点
+    red_point_list = [(423, 748), (327, 1172), (775, 1333), (880, 889)]  # 碎片的小红点
+    add_point_list = [(354, 806), (267, 1220), (714, 1397), (813, 947)]  # 碎片的加号
+    red_point_visible_list = [False, False, False, False]
+    # 战力值坐标
+    power_area_list = [
+        (284, 850, 363, 886), (560, 849, 639, 885), (840, 847, 915, 887),
+        (284, 1208, 364, 1244), (570, 1202, 629, 1247), (840, 1206, 915, 1246)
+    ]
+    refresh_point = [326, 1548, 399, 1588]  # 刷新坐标
+    challenge_point = [682, 1549, 752, 1586]  # 挑战坐标
+    jump_point = [856, 1746, 952, 1798]  # 跳过
+    while True:
+        # 检测是否有未收集的碎片
+        cur_img = Image.open(screenshot(temp_dir))
+        for pos, value in enumerate(red_point_list):
+            if cur_img.getpixel(value)[0] == 247:
+                red_point_visible_list[pos] = True
+        have_patch = red_point_visible_list.count(True) > 0
+        if have_patch:
+            for pos, value in enumerate(red_point_visible_list):
+                if value:
+                    logger.info("碎片{}未采集，自动采集".format(pos + 1))
+                    click_xy(add_point_list[pos])
+                    # 分析战力值是否有红色，有说明打不过
+                    can_attack_pos = None  # 能攻击的下标
+                    while can_attack_pos is None:
+                        temp_img = Image.open(screenshot(temp_dir))
+                        for power_pos, power_area in enumerate(power_area_list):
+                            if can_attack_pos is None:
+                                logger.info("分析第对手【{}】".format(power_pos + 1))
+                                have_red = False
+                                for x in range(power_area[0], power_area[2]):
+                                    if have_red:
+                                        break
+                                    else:
+                                        # 遍历战力值如果有红色，说明打不过，直接切换到下个对手
+                                        for y in range(power_area[1], power_area[3]):
+                                            if temp_img.getpixel((x, y)) == (252, 62, 62, 255):
+                                                logger.info("检测到红色数字，不敌")
+                                                have_red = True
+                                                break
+                                if not have_red:
+                                    can_attack_pos = power_pos
+                            else:
+                                logger.info("打得过对手【{}】，发起攻击！".format(can_attack_pos + 1))
+                                click_area(power_area_list[can_attack_pos])
+                                click_xy(challenge_point)
+                                sleep(0.3)
+                                click_area(jump_point)
+                                sleep(0.2)
+                                click_xy(120, 1796)
+                                break
+                    if can_attack_pos is None:
+                        logger.info("没一个打得过，刷新对手...")
+                        click_area(refresh_point)
+                        sleep(3)
+        else:
+            print("未检测到碎片")
+            break
+
+    # 判断是否有订单
+    # 点击订单
+    # click_xy(821, 204)
+
+
 if __name__ == '__main__':
     is_dir_existed(temp_dir, is_recreate=True)
     # for i in range(0, 60):
     #     auto_bridge_old()
     #     time.sleep(3)
-    auto_pk()
+    # auto_pk()
+    # screenshot(temp_dir)
+    auto_business()
