@@ -245,9 +245,9 @@ def auto_bridge_old():
 # 自动全球交易
 def auto_business():
     order_point = (888, 188)  # 订单红点
+    merge_point = (459, 1843)  # 订单红点
     red_point_list = [(423, 748), (327, 1172), (775, 1333), (880, 889)]  # 碎片的小红点
     add_point_list = [(354, 806), (267, 1220), (714, 1397), (813, 947)]  # 碎片的加号
-    red_point_visible_list = [False, False, False, False]
     # 战力值坐标
     power_area_list = [
         (284, 850, 363, 886), (560, 849, 639, 885), (840, 847, 915, 887),
@@ -257,11 +257,11 @@ def auto_business():
     challenge_point = [682, 1549, 752, 1586]  # 挑战坐标
     jump_point = [856, 1746, 952, 1798]  # 跳过
     while True:
-        # 检测是否有未收集的碎片
+        red_point_visible_list = [False, False, False, False]  # 检测是否有未收集的碎片
         cur_img = Image.open(screenshot(temp_dir))
+        logger.info("检测是否有未采集碎片")
         for pos, value in enumerate(red_point_list):
-            if cur_img.getpixel(value)[0] == 247:
-                red_point_visible_list[pos] = True
+            red_point_visible_list[pos] = cur_img.getpixel(value)[0] == 247
         have_patch = red_point_visible_list.count(True) > 0
         if have_patch:
             for pos, value in enumerate(red_point_visible_list):
@@ -269,8 +269,9 @@ def auto_business():
                     logger.info("碎片{}未采集，自动采集".format(pos + 1))
                     click_xy(add_point_list[pos])
                     # 分析战力值是否有红色，有说明打不过
+                    not_match_attack_target = True  # 未匹配到攻击目标
                     can_attack_pos = None  # 能攻击的下标
-                    while can_attack_pos is None:
+                    while not_match_attack_target:
                         temp_img = Image.open(screenshot(temp_dir))
                         for power_pos, power_area in enumerate(power_area_list):
                             if can_attack_pos is None:
@@ -288,6 +289,7 @@ def auto_business():
                                                 break
                                 if not have_red:
                                     can_attack_pos = power_pos
+                                    not_match_attack_target = False
                             else:
                                 logger.info("打得过对手【{}】，发起攻击！".format(can_attack_pos + 1))
                                 click_area(power_area_list[can_attack_pos])
@@ -297,13 +299,26 @@ def auto_business():
                                 sleep(0.2)
                                 click_xy(120, 1796)
                                 break
-                    if can_attack_pos is None:
-                        logger.info("没一个打得过，刷新对手...")
-                        click_area(refresh_point)
-                        sleep(3)
+                        if not_match_attack_target:
+                            logger.info("没一个打得过，刷新对手...")
+                            click_area(refresh_point)
+                            sleep(0.1)
         else:
-            print("未检测到碎片")
-            break
+            logger.info("未检测到碎片")
+            # 检测是否有完成合成按钮
+            if cur_img.getpixel(merge_point)[0] == 252:
+                logger.info("检测到合成按钮，点击合成")
+                click_xy(merge_point)
+                sleep(0.2)
+                click_xy(merge_point)
+                continue
+            if cur_img.getpixel(order_point)[0] == 247:
+                logger.info("检测到未完成订单，自动点击")
+                click_xy(order_point)
+                continue
+            else:
+                logger.info("未检测到待完成订单，任务结束！")
+                break
 
     # 判断是否有订单
     # 点击订单
