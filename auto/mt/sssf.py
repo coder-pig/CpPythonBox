@@ -316,5 +316,5 @@ if __name__ == '__main__':
     #     auto_bridge_old()
     #     time.sleep(3)
     # auto_pk()
-    # screenshot(temp_dir)
-    auto_business()
+    screenshot(temp_dir)
+    # auto_business()

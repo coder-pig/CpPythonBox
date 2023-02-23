@@ -122,16 +122,17 @@ def input_text(text):
     return start_cmd('adb shell input text %s' % text)
 
 
-def swipe(start_x, start_y, end_x, end_y):
+def swipe(start_x, start_y, end_x, end_y, duration=500):
     """
     滑动，从起始坐标点滑动到终点坐标
     :param start_x: 起始坐标点x坐标
     :param start_y: 起始坐标点y坐标
     :param end_x: 终点坐标点x坐标
     :param end_y: 终点坐标点y坐标
+    :param duration: 滑动持续时间
     :return:
     """
-    return start_cmd('adb shell input swipe %d %d %d %d' % (start_x, start_y, end_x, end_y))
+    return start_cmd('adb shell input swipe %d %d %d %d %d' % (start_x, start_y, end_x, end_y, duration))
 
 
 def click_xy(*args):
@@ -253,6 +254,34 @@ class Node:
     def add_node(self, node):
         self.nodes.append(node)
 
+    """
+    根据resource_id查找单个node
+    """
+
+    def find_node_by_resource_id(self, resource_id):
+        if self.resource_id == resource_id:
+            return self
+        if len(self.nodes) > 0:
+            for node in self.nodes:
+                result = node.find_node_by_resource_id(resource_id)
+                if result:
+                    return result
+
+    """
+    根据resource_id查找node列表
+    """
+
+    def find_nodes_by_resource_id(self, resource_id):
+        node_list = []
+        if self.resource_id == resource_id:
+            node_list.append(self)
+        if len(self.nodes) > 0:
+            for node in self.nodes:
+                result = node.find_nodes_by_resource_id(resource_id)
+                if result:
+                    node_list += result
+        return node_list
+
 
 def analysis_ui_xml(xml_path):
     """
@@ -263,7 +292,7 @@ def analysis_ui_xml(xml_path):
     root = etree.parse(xml_path, parser=etree.XMLParser(encoding="utf-8"))
     root_node_element = root.xpath('/hierarchy/node')[0]  # 定位到根node节点
     node = analysis_element(root_node_element)
-    print_node(node)  # 打印看看效果
+    # print_node(node)  # 打印看看效果
     return node
 
 
