@@ -327,9 +327,9 @@ def auto_business():
 
 if __name__ == '__main__':
     is_dir_existed(temp_dir, is_recreate=True)
-    # for i in range(0, 60):
-    #     auto_bridge_old()
-    #     time.sleep(3)
+    for i in range(0, 18):
+        auto_bridge_old()
+        time.sleep(4)
     # auto_pk()
-    screenshot(temp_dir)
+    # screenshot(temp_dir)
     # auto_business()

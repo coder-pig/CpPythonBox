@@ -2,10 +2,10 @@
 # !/usr/bin/env python
 """
 -------------------------------------------------
-   File     : boss.py
+   File     : boss_adb.py
    Author   : CoderPig
    date     : 2023-02-23 11:04 
-   Desc     : Boss直聘岗位数据爬取(自动化)
+   Desc     : Boss直聘岗位数据爬取(App自动化)
 -------------------------------------------------
 """
 from util.adb_util import current_ui_xml, analysis_ui_xml, swipe, sleep, print_node
@@ -13,7 +13,8 @@ from util.file_util import get_temp_save_root_path, is_dir_existed, write_text_t
 from util.logger_util import default_logger
 import os
 
-result_file = "result.txt"
+output_dir = os.path.join(os.getcwd(), "output")
+result_file = os.path.join(output_dir, "adb_result.txt")
 logger = default_logger()
 temp_dir = get_temp_save_root_path()
 remove_duplicates_set = set()
@@ -47,3 +48,4 @@ def crawl_data():
 if __name__ == '__main__':
     is_dir_existed(temp_dir, is_recreate=True)
     crawl_data()
+

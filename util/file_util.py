@@ -107,7 +107,6 @@ def filter_file_type(file_dir=os.getcwd(), file_suffix=''):
     return result_list
 
 
-# 获取目录下包含字符串的文件路径列表
 def filter_file_by_string(file_dir, content):
     """ 获取目录下包含字符串的文件路径列表
 
@@ -172,6 +171,23 @@ def read_file_text_content(file_path):
     else:
         with open(file_path, 'r+', encoding='utf-8') as f:
             return f.read()
+
+
+def read_list_from_file(file_path):
+    """ 按行的形式读取文件内容
+
+    Args:
+        file_path (str): 文件路径
+
+    Returns:
+        list: 内容列表
+    """
+    if os.path.exists(file_path):
+        data_list = []
+        with open(file_path, "r+", encoding='utf-8') as f:
+            for ip in f:
+                data_list.append(ip.replace("\n", ""))
+        return data_list
 
 
 def read_file_content(file_path):

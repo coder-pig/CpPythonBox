@@ -120,3 +120,5 @@ ENV/
 /markdown/md_to_wx/wash/out.html
 /media/download/output
 config.ini
+/auto/boss/output/
+/auto/boss/userData/

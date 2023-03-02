@@ -90,8 +90,8 @@ def current_pkg_activity():
     获取当前页面的包名和Activity类名
     :return:
     """
-    result = start_cmd('adb shell dumpsys activity activities | grep mResumedActivity')
-    logger.info(result)
+    result = start_cmd('adb shell dumpsys activity top | grep ACTIVITY')
+    # logger.info(result)
     if result is not None and len(result) > 0:
         match_result = re.search(pkg_act_pattern, result)
         if match_result:
@@ -226,7 +226,7 @@ def current_ui_xml(save_dir=None):
     :param save_dir: 文件保存根目录
     :return: 布局xml文件的本地路径
     """
-    ui_xml_name = "ui_%d.xml" % (int(round(t * 1000)))
+    ui_xml_name = "ui_%d.xml" % (int(round(time.time() * 1000)))
     start_cmd('adb shell /system/bin/uiautomator dump --compressed  /sdcard/%s' % ui_xml_name)
     ui_xml_path = os.path.join(os.getcwd() if save_dir is None else save_dir, ui_xml_name)
     start_cmd('adb pull /sdcard/%s %s' % (ui_xml_name, ui_xml_path))
@@ -254,11 +254,12 @@ class Node:
     def add_node(self, node):
         self.nodes.append(node)
 
-    """
-    根据resource_id查找单个node
-    """
-
     def find_node_by_resource_id(self, resource_id):
+        """
+        根据resource_id查找node列表
+        :param resource_id: 资源id字符串
+        :return: 结点列表
+        """
         if self.resource_id == resource_id:
             return self
         if len(self.nodes) > 0:
@@ -267,11 +268,12 @@ class Node:
                 if result:
                     return result
 
-    """
-    根据resource_id查找node列表
-    """
-
     def find_nodes_by_resource_id(self, resource_id):
+        """
+        根据resource_id查找node
+        :param resource_id: 资源id字符串
+        :return: 结点
+        """
         node_list = []
         if self.resource_id == resource_id:
             node_list.append(self)
@@ -346,5 +348,5 @@ class DeviceNotConnectException(Exception):
 
 
 if __name__ == '__main__':
-    init()
+    # init()
     logger.info(current_pkg_activity())
