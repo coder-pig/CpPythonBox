@@ -59,6 +59,27 @@ def extract_text(origin_data_dict):
         logger.info("Json数据解析异常")
 
 
+def picture_local_ocr_filter(pic_path, keyword=None, all_match=False):
+    """
+    本地OCR后，筛选包含关键字的文字坐标
+    :param pic_path: 待识别图片路径
+    :param keyword: 匹配关键字
+    :param all_match: 是否全全词匹配
+    :return: 匹配的key，匹配的文字坐标
+    """
+    orc_result = picture_local_ocr(pic_path)
+    bound_result = None
+    if orc_result is not None:
+        for key in orc_result.keys():
+            if all_match:
+                if keyword == key:
+                    return key, orc_result[key]
+            else:
+                if keyword in key:
+                    return key, orc_result[key]
+    return bound_result
+
+
 def bd_ocr_general(pic_path):
     """
     百度OCR识别

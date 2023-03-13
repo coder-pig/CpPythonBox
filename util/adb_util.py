@@ -85,6 +85,16 @@ def kill_app(package_name):
     return start_cmd('adb shell am force-stop %s' % package_name)
 
 
+def restart_app(package_name):
+    """
+    重启APP
+    :param package_name: 应用包名
+    :return:
+    """
+    kill_app(package_name)
+    start_app(package_name)
+
+
 def current_pkg_activity():
     """
     获取当前页面的包名和Activity类名
@@ -111,6 +121,10 @@ def key_event(event):
 def input_text(text):
     """
     当焦点处于某文本框时，模拟输入文本
+    注：adb默认不支持Unicode编码，无法直接将中文输入到手机
+    需要另外安装一个输入法：https://github.com/senzhk/ADBKeyBoard
+    安装完后设置为默认输入法，然后用adb命令测试中文：
+    adb shell am broadcast -a ADB_INPUT_TEXT --es msg '中文'
     :param text: 输入文本内容
     :return:
     """
@@ -294,7 +308,7 @@ def analysis_ui_xml(xml_path):
     root = etree.parse(xml_path, parser=etree.XMLParser(encoding="utf-8"))
     root_node_element = root.xpath('/hierarchy/node')[0]  # 定位到根node节点
     node = analysis_element(root_node_element)
-    # print_node(node)  # 打印看看效果
+    print_node(node)  # 打印看看效果
     return node
 
 
@@ -349,4 +363,6 @@ class DeviceNotConnectException(Exception):
 
 if __name__ == '__main__':
     # init()
-    logger.info(current_pkg_activity())
+    # logger.info(current_pkg_activity())
+    # current_ui_xml(os.getcwd())
+    screenshot(os.getcwd())
