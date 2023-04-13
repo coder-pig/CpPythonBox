@@ -365,4 +365,5 @@ if __name__ == '__main__':
     # init()
     # logger.info(current_pkg_activity())
     # current_ui_xml(os.getcwd())
-    screenshot(os.getcwd())
+    # screenshot(os.getcwd())
+    print(current_pkg_activity())

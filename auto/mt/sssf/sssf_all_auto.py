@@ -31,10 +31,10 @@ def start_game():
     input_text("谁是首富")
     click_area(928, 94, 1008, 94)  # 点击搜索
     sleep(10)  # 等待游戏加载完成
-    click_xy(932, 351)  # 关闭游戏公告
-    sleep(0.3)
-    click_xy(548, 1779)  # 点击开始游戏
-    sleep(15)  # 等待游戏加载完成
+    # click_xy(932, 351)  # 关闭游戏公告
+    # sleep(0.3)
+    click_xy(548 , 1779)  # 点击开始游戏
+    sleep(20)  # 等待游戏加载完成
     confirm_bound = picture_local_ocr_filter(screenshot(temp_dir), "确定")  # 点击确定
     if confirm_bound:
         click_area(confirm_bound[1])
@@ -68,19 +68,20 @@ def vip_award():
     # 签到与邮箱
     click_xy(24, 803)  # 点击展开按钮
     click_xy(56, 831)  # 点击签到
+    sleep(1)
     receive_bound = picture_local_ocr_filter(screenshot(temp_dir), "领取")  # 点击领取
     if receive_bound:
         click_area(receive_bound[1])
     sleep(1)
-    click_xy(336, 1547)  # 点击空白区域
+    click_xy(135, 1943)  # 点击空白区域
     click_xy(1040, 235)  # 点击x
     logger.info("每日签到已完成...")
     click_xy(24, 803)  # 点击展开按钮
     click_xy(72, 975)  # 点击邮件
     click_xy(736, 1567)  # 点击一键领取
     click_xy(736, 1567)  # 点击一键领取
-    click_xy(336, 1547)  # 点击空白区域
-    click_xy(944, 399)  # 点击x
+    click_xy(135, 1943)  # 点击空白区域
+    sleep(1)
     logger.info("邮件奖品已领取...")
 
 
@@ -89,8 +90,8 @@ def assistant_daily_tasks():
     助理日常
     :return:
     """
-    click_xy(64, 2023)
-    # 环球打卡
+    # click_xy(64, 2023)
+    # # 环球打卡
     # click_xy(708, 695)
     # click_xy(540, 1875)  # 点击打卡
     # sleep(2)
@@ -101,15 +102,15 @@ def assistant_daily_tasks():
     # click_xy(924, 1527)
     # click_xy(960, 435)
     # click_xy(1020, 147)  # 点击x
-    logger.info("环球打卡任务已完成...")
-    # 助理
+    # logger.info("环球打卡任务已完成...")
+    # # 助理
     # click_xy(536, 1119)  # 点击助理
     # click_xy(716, 1951)  # 勾选一键团建
     # click_xy(800, 1843)  # 点击一键团建
     # click_xy(336, 1547)  # 点击空白区域
     # click_xy(88, 1863)  # 点击返回
-    logger.info("助理任务已完成...")
-    # 实习生
+    # logger.info("助理任务已完成...")
+    # # 实习生
     # click_xy(660, 1327)  # 点击实习生
     # for i in range(10):
     #     click_xy(260, 1887)  # 摆摊10次
@@ -119,19 +120,21 @@ def assistant_daily_tasks():
     #     click_xy(1000, 1327)  # 电话协助
     #     sleep(2)
     # click_xy(953, 363)  # 点击x
-    # click_xy(668, 2015)  # 点击实习
-    # click_xy(80, 1231)  # 点击留学派遣
-    # click_xy(532, 495)  # 点击美食之都
-    # click_xy(800, 1811)  # 点击双人留学
-    # click_xy(424, 1651)  # 选中第二个留学生
-    # click_xy(80, 1231)  # 点击留学派遣
-    # click_xy(532, 495)  # 点击美食之都
-    # click_xy(800, 1811)  # 点击双人留学
-    # click_xy(660, 1667)  # 选中第三个留学生
-    # click_xy(80, 1231)  # 点击留学派遣
-    # click_xy(532, 495)  # 点击美食之都
-    # click_xy(800, 1811)  # 点击双人留学
-    # click_xy(100, 1679)  # 点击返回
+    click_xy(668, 2015)  # 点击实习
+    click_xy(80, 1231)  # 点击留学派遣
+    click_xy(532, 495)  # 点击美食之都
+    click_xy(800, 1811)  # 点击双人留学
+    click_xy(424, 1651)  # 选中第二个留学生
+    click_xy(80, 1231)  # 点击留学派遣
+    click_xy(532, 495)  # 点击美食之都
+    click_xy(800, 1811)  # 点击双人留学
+    click_xy(660, 1667)  # 选中第三个留学生
+    click_xy(80, 1231)  # 点击留学派遣
+    click_xy(532, 495)  # 点击美食之都
+    click_xy(800, 1811)  # 点击双人留学
+    click_xy(100, 1679)  # 点击返回
+    click_xy(540, 2018)  # 点击地图
+    sleep(0.5)
     logger.info("留学生任务已完成...")
 
 
@@ -141,26 +144,29 @@ def finance_daily_tasks():
     :return:
     """
     # 街区经营
-    click_xy(872, 2041)  # 点击金融
-    click_xy(596, 819)  # 点击街区经营
-    for i in range(1, 20):
-        click_xy(548, 1751)  # 点击一键巡视
-        click_xy(336, 1547)  # 点击空白区域
-        click_xy(68, 399)  # 点击事件
-        click_xy(752, 1623)  # 点击投资
-        click_xy(336, 1547)  # 点击空白区域
-        click_xy(960, 351)  # 点击x
-    click_xy(336, 1547)  # 点击空白区域
-    logger.info("街区经营任务已完成...")
+    # click_xy(872, 2041)  # 点击金融
+    # sleep(0.8)
+    # click_xy(596, 819)  # 点击街区经营
+    # for i in range(1, 20):
+    #     click_xy(548, 1751)  # 点击一键巡视
+    #     click_xy(336, 1547)  # 点击空白区域
+    #     click_xy(68, 399)  # 点击事件
+    #     click_xy(752, 1623)  # 点击投资
+    #     click_xy(336, 1547)  # 点击空白区域
+    #     click_xy(960, 351)  # 点击x
+    # click_xy(336, 1547)  # 点击空白区域
+    # logger.info("街区经营任务已完成...")
 
     # 排位战
     click_xy(872, 2041)  # 点击金融
+    sleep(0.8)
     click_xy(532, 1307)  # 点击商界排位战
-    for i in range(1, 30):
+    for i in range(0, 30):
         logger.info("执行第【{}\\{}】次对决".format(i + 1, 30))
         click_xy(552, 1359)  # 点击开始
         click_xy(536, 1839)  # 点击开始
         click_xy(916, 1771)  # 点击跳过
+        click_xy(336, 1547)  # 点击空白区域
         click_xy(336, 1547)  # 点击空白区域
         sleep(0.2)
     logger.info("商界排位战任务已完成...")
@@ -173,9 +179,12 @@ def finance_daily_tasks():
 
     # 名车博览会
     click_xy(872, 2041)  # 点击金融
+    sleep(0.8)
     click_xy(564, 1711)  # 点击名车博览会
     swipe(500, 1500, 500, 500, 200)
     sleep(3)
+    swipe(500, 1500, 500, 1200)
+    sleep(1)
     target_list = []
     ocr_result_dict = picture_local_ocr(screenshot(temp_dir))
     if ocr_result_dict:
@@ -277,45 +286,48 @@ def finance_daily_tasks():
     attack_count_pattern = re.compile(r'.*?: (\d+)', re.S)  # 获得剩余次数的正则
     while True:
         attack_ocr_result = picture_local_ocr_filter(screenshot(temp_dir), "剩余次数")
-        attack_match_result = attack_count_pattern.search(attack_ocr_result[0])
-        if attack_match_result is not None and int(attack_match_result.group(1)) > 0:
-            click_xy(852, 239)  # 刷新订单
-            click_xy(356, 803)  # 选中第一个
-            click_xy(724, 1571)  # 点击挑战
-            click_xy(920, 1767)  # 点击跳过
-            click_xy(336, 1547)  # 点击空白区域
-            click_xy(256, 1243)  # 选中第二个
-            click_xy(724, 1571)  # 点击挑战
-            click_xy(920, 1767)  # 点击跳过
-            click_xy(336, 1547)  # 点击空白区域
-            click_xy(708, 1383)  # 选中第三个
-            click_xy(724, 1571)  # 点击挑战
-            click_xy(920, 1767)  # 点击跳过
-            click_xy(336, 1547)  # 点击空白区域
-            click_xy(816, 939)  # 选中第四个
-            click_xy(724, 1571)  # 点击挑战
-            click_xy(920, 1767)  # 点击跳过
-            click_xy(336, 1547)  # 点击空白区域
-            click_xy(524, 1843)  # 点击合成
-            click_xy(336, 1547)  # 点击空白区域
+        if attack_ocr_result:
+            attack_match_result = attack_count_pattern.search(attack_ocr_result[0])
+            if attack_match_result is not None and int(attack_match_result.group(1)) > 0:
+                click_xy(852, 239)  # 刷新订单
+                click_xy(356, 803)  # 选中第一个
+                click_xy(724, 1571)  # 点击挑战
+                click_xy(920, 1767)  # 点击跳过
+                click_xy(336, 1547)  # 点击空白区域
+                click_xy(256, 1243)  # 选中第二个
+                click_xy(724, 1571)  # 点击挑战
+                click_xy(920, 1767)  # 点击跳过
+                click_xy(336, 1547)  # 点击空白区域
+                click_xy(708, 1383)  # 选中第三个
+                click_xy(724, 1571)  # 点击挑战
+                click_xy(920, 1767)  # 点击跳过
+                click_xy(336, 1547)  # 点击空白区域
+                click_xy(816, 939)  # 选中第四个
+                click_xy(724, 1571)  # 点击挑战
+                click_xy(920, 1767)  # 点击跳过
+                click_xy(336, 1547)  # 点击空白区域
+                click_xy(524, 1843)  # 点击合成
+                click_xy(336, 1547)  # 点击空白区域
+            else:
+                break
         else:
             break
     logger.info("全球贸易任务已完成...")
 
     # 萌宠收容
-    click_xy(716, 2047)  # 点击科技
-    click_xy(872, 2041)  # 点击金融
-    sleep(1.5)
-    swipe(100, 1800, 100, 1000)
-    sleep(1.5)
-    swipe(100, 1800, 100, 1000)
-    sleep(1.5)
-    click_xy(536, 1371)
-    for i in range(10):
-        click_xy(580, 1859)
-        click_xy(884, 1603)  # 点击跳过
-        click_xy(336, 1547)  # 点击空白区域
-    logger.info("萌宠收容任务已完成...")
+    # click_xy(716, 2047)  # 点击科技
+    # click_xy(872, 2041)  # 点击金融
+    # sleep(1.5)
+    # swipe(100, 1800, 100, 1000)
+    # sleep(1.5)
+    # swipe(100, 1800, 100, 1000)
+    # sleep(1.5)
+    # click_xy(536, 1371)
+    # for i in range(10):
+    #     click_xy(580, 1859)
+    #     click_xy(884, 1603)  # 点击跳过
+    #     click_xy(336, 1547)  # 点击空白区域
+    # logger.info("萌宠收容任务已完成...")
 
     # 航空联盟
     click_xy(716, 2047)  # 点击科技
@@ -332,7 +344,10 @@ def finance_daily_tasks():
     for i in range(3):
         click_xy(476, 587)
         click_xy(336, 1547)  # 点击空白区域
-    click_xy(88, 1831)  # 点击空白区域
+    sleep(0.8)
+    click_xy(88, 1831)  # 点击返回
+    click_xy(540, 2018)  # 点击地图
+    sleep(1)
     logger.info("航空联盟任务已完成...")
 
 
@@ -368,9 +383,14 @@ def ranking_list_tasks():
     click_xy(144, 1695)  # 地图榜
     sleep(0.5)
     click_xy(968, 2031)
+    click_xy(144, 1791)  # 人气榜
+    sleep(0.5)
+    click_xy(968, 2031)
     click_xy(144, 1891)  # 舒适榜
     sleep(0.5)
     click_xy(968, 2031)
+    sleep(0.8)
+    click_xy(88, 1831)  # 点击返回
     logger.info("排行榜点赞任务已完成...")
 
 
@@ -511,11 +531,11 @@ def all_diary_task():
     执行所有日常任务的Task
     :return:
     """
-    start_game()
-    vip_award()
-    finance_daily_tasks()
+    # start_game()
+    # vip_award()
+    # finance_daily_tasks()
+    # ranking_list_tasks()
     assistant_daily_tasks()
-    ranking_list_tasks()
     garden_tasks()
     island_tasks()
 
