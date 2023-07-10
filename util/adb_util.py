@@ -254,7 +254,7 @@ class Node:
 
     def __init__(self, index=None, text=None, resource_id=None, class_name=None, package=None, content_desc=None,
                  clickable=None,
-                 bounds=None):
+                 bounds=None, parent=None):
         self.index = index
         self.text = text
         self.resource_id = resource_id
@@ -264,6 +264,7 @@ class Node:
         self.bounds = bounds
         self.clickable = clickable
         self.nodes = []
+        self.parent = parent
 
     def add_node(self, node):
         self.nodes.append(node)
@@ -298,6 +299,45 @@ class Node:
                     node_list += result
         return node_list
 
+    def find_node_by_text(self, match_text=None, pattern=None):
+        """
+        根据resource_id查找node列表
+        :param pattern:
+        :param match_text: 匹配文本
+        :return: 结点列表
+        """
+        if pattern is None:
+            if self.text == match_text:
+                return self
+        else:
+            return pattern.search(self.text, re.S)
+        if len(self.nodes) > 0:
+            for node in self.nodes:
+                result = node.find_node_by_text(match_text)
+                if result:
+                    return result
+
+    def find_nodes_by_text(self, match_text=None, pattern=None):
+        """
+        根据resource_id查找node
+        :param resource_id: 资源id字符串
+        :return: 结点
+        """
+        node_list = []
+        if pattern is None:
+            if self.text == match_text:
+                node_list.append(self)
+        else:
+            temp = re.search(pattern, self.text)
+            if temp:
+                node_list.append(self)
+        if len(self.nodes) > 0:
+            for node in self.nodes:
+                result = node.find_nodes_by_text(match_text, pattern)
+                if result:
+                    node_list += result
+        return node_list
+
 
 def analysis_ui_xml(xml_path):
     """
@@ -307,12 +347,12 @@ def analysis_ui_xml(xml_path):
     """
     root = etree.parse(xml_path, parser=etree.XMLParser(encoding="utf-8"))
     root_node_element = root.xpath('/hierarchy/node')[0]  # 定位到根node节点
-    node = analysis_element(root_node_element)
+    node = analysis_element(root_node_element, root_node_element)
     print_node(node)  # 打印看看效果
     return node
 
 
-def analysis_element(element):
+def analysis_element(element, parent=None):
     """
     递归分析结点(转换为node对象)
     :param element:
@@ -331,11 +371,13 @@ def analysis_element(element):
             element.attrib['clickable'],
             (int(bounds_result[1]), int(bounds_result[2]), int(bounds_result[3]), int(bounds_result[4]))
         )
+        if parent is not None:
+            node.parent = parent
         # 解析子节点，递归调用
         child_node_elements = element.xpath('node')
         if len(child_node_elements) > 0:
             for child_node_element in child_node_elements:
-                node_result = analysis_element(child_node_element)
+                node_result = analysis_element(child_node_element, node)
                 if node_result:
                     node.nodes.append(node_result)
         return node
@@ -364,6 +406,6 @@ class DeviceNotConnectException(Exception):
 if __name__ == '__main__':
     # init()
     # logger.info(current_pkg_activity())
-    # current_ui_xml(os.getcwd())
+    current_ui_xml(os.getcwd())
     # screenshot(os.getcwd())
     print(current_pkg_activity())
