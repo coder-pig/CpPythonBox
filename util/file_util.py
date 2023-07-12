@@ -17,6 +17,10 @@ import hashlib
 lock = threading.RLock()
 
 
+def if_file_existed(file_path):
+    return os.path.exists(file_path)
+
+
 def is_dir_existed(file_path, mkdir=True, is_recreate=False):
     """ 判断目录是否存在，不存在则创建
 
