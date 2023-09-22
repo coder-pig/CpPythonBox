@@ -6,6 +6,8 @@
    Author   : CoderPig
    date     : 2023-07-11 14:43
    Desc     : 根据 Kotlin实体类代码 生成用于Mock的Response Data数据
+   使用方法  : 把Kotlin实体类的代码贴到【Kotlin实体类.txt】文件中，引用到的类型也要包含
+              然后直接生成json数据，json解析异常一般是漏了引用到的实体类，或者没有继承Serializable接口
 -------------------------------------------------
 """
 import json
@@ -100,7 +102,7 @@ def generate_mock_response_json():
             elif temp_field.name.lower().find("time") != -1 or temp_field.name.lower().find("date") != -1:
                 temp_field.value = str(round(time.time() * 1000))
             elif temp_field.name.lower().find("url") != -1:
-                temp_field.value = '"https://img.cdn.zhaoshang800.com/image/2023/06/27/281a405c-2870-4f36-85e4' \
+                temp_field.value = '"https://img.cdn.xxx.com/image/2023/06/27/281a405c-2870-4f36-85e4' \
                                    '-4363b0a287b9/d725c3a9-f5f2-4a82-a9a1-77eb5ebfbeaf.png"'
             elif temp_field.name.lower().endswith("id") or temp_field.data_type == "Long":
                 temp_field.value = int(''.join(random.choice('0123456789') for _ in range(19)))

@@ -1,0 +1,14 @@
+<span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onAccessibilityEvent</span><span class="hljs-params">(event: <span class="hljs-type">AccessibilityEvent</span>?)</span></span> {
+    event?.let {
+        executor.execute {
+            searchNode(<span class="hljs-string">&quot;跳过&quot;</span>)?.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+            ruleList?.forEach {
+                it.popupRules.forEach { rule -&gt;
+                    <span class="hljs-comment">// 如果定位到匹配结点，查找要点击的结点并点击</span>
+                    <span class="hljs-keyword">if</span> (searchNode(rule.id) != <span class="hljs-literal">null</span>) searchNode(rule.action)?.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                }
+            }
+        }
+    }
+}
+

@@ -1,38 +1,14 @@
-def pic_to_local(match_result, pic_save_dir, multiline):
-    console_output(multiline, "替换前的图片路径：" + match_result[2])
-    # 生成新的图片名
-    img_file_name = "{}_{}.{}".format(int(round(time.time())), order_set.pop(), match_result[3])
-    console_output(multiline, "新的文件名：" + img_file_name)
-    # 拼接图片相对路径(Markdown用到的)
-    relative_path = 'images/{}'.format(img_file_name)
-    # 拼接图片绝对路径，下载到本地
-    absolute_path = os.path.join(pic_save_dir, img_file_name)
-    # 顺带下载图片
-    loop.run_until_complete(download_pic(absolute_path, match_result[2], multiline))
-    # 还需要拼接前后括号()
-    return "{}{}{}".format(match_result[1], relative_path, match_result[4])
-
-
-# 下载图片的方法
-async def download_pic(pic_path, url, multiline, headers=None):
-    try:
-        if headers is None:
-            headers = default_headers
-        if url.startswith("http") | url.startswith("https"):
-            if os.path.exists(pic_path):
-                console_output(multiline, "图片已存在，跳过下载：%s" % pic_path)
-            else:
-                resp = await requests.get(url, headers=headers)
-                console_output(multiline, "下载图片：%s" % resp.url)
-                if resp is not None:
-                    if resp.status != 404:
-                        async with aiofiles.open(pic_path, "wb+") as f:
-                            await f.write(await resp.read())
-                            console_output(multiline, "图片下载完毕：%s" % pic_path)
-                    else:
-                        console_output(multiline, "图片不存在：{}".format(url))
-        else:
-            console_output(multiline, "图片链接格式不正确：%s - %s" % (pic_path, url))
-    except Exception as e:
-        console_output(multiline, "下载异常：{}\n{}".format(url, e))
+override fun onAccessibilityEvent(event: AccessibilityEvent?) {
+    event?.let {
+        executor.execute {
+            searchNode("跳过")?.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+            ruleList?.forEach {
+                it.popupRules.forEach { rule ->
+                    // 如果定位到匹配结点，查找要点击的结点并点击
+                    if (searchNode(rule.id) != null) searchNode(rule.action)?.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                }
+            }
+        }
+    }
+}
 

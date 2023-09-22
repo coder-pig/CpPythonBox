@@ -18,7 +18,7 @@ from threading import Thread
 
 from util.file_util import read_list_from_file, write_text_to_file
 
-base_url = "xxx"
+base_url = "http://xxx.xxx.xxx.com/server/index.php?s=/api"
 # 查询用户信息
 userinfo_url = base_url + "/user/info"
 # 创建验证码
@@ -37,7 +37,7 @@ user_token_file = "user_token.txt"
 analyze_result_file = "analyze_result.txt"
 
 # 匹配正则
-api_url_pattern = re.compile(r"xxx/(\d+)", re.S)
+api_url_pattern = re.compile(r"http://xxx\.xxx\.xxx\.com/web/#/1/(\d+)", re.S)
 table_cell_pattern = re.compile(r"^\|(.*?)\|$", re.M)
 field_name_pattern = re.compile(r"[a-zA-Z]+")
 
@@ -173,7 +173,7 @@ def analyze_api_url(api_url):
 def test_analyze():
     api_info_list = read_list_from_file('all_page_info.txt')
     for api_info in api_info_list:
-        analyze_api_url("xxx/{}".format(api_info.split("~")[0]))
+        analyze_api_url("http://xxx.xxx.xxx.com/web/#/1/{}".format(api_info.split("~")[0]))
 
 
 if __name__ == '__main__':

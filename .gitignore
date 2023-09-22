@@ -122,4 +122,3 @@ ENV/
 config.ini
 /auto/boss/output/
 /auto/boss/userData/
-/company/fetch_api_table_data.py
