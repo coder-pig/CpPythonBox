@@ -122,3 +122,5 @@ ENV/
 config.ini
 /auto/boss/output/
 /auto/boss/userData/
+/markdown/transform/local_md/
+/markdown/transform/origin_md
