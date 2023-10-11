@@ -5,7 +5,7 @@
    File     : boss_spider.py
    Author   : CoderPig
    date     : 2023-02-23 17:33 
-   Desc     : boss直聘爬虫
+   Desc     : boss直聘爬虫-使用浏览器模拟访问
 -------------------------------------------------
 """
 import asyncio

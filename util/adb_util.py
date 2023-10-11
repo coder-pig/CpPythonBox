@@ -5,7 +5,7 @@
    File     : adb_util.py
    Author   : CoderPig
    date     : 2022-09-26 11:01 
-   Desc     : 
+   Desc     : adb命令工具类
 -------------------------------------------------
 """
 import os
