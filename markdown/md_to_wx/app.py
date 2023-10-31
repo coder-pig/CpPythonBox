@@ -10,8 +10,8 @@
 """
 import os.path
 
-from markdown.md_to_wx import config_getter
-from markdown.md_to_wx.styles_renderer import render_article
+from styles_renderer import render_article
+import config_getter
 from util.file_util import is_dir_existed, filter_file_type, read_file_text_content, write_text_to_file
 
 md_dir = os.path.join(os.getcwd(), config_getter.get_config("config", "md_dir"))  # 待转换md文件路径

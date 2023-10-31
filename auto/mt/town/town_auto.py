@@ -95,30 +95,44 @@ def roll():
         continue_game = None
         confirm = None
         receive = None
+        buy_one = None
         for result in ocr_result_dict.keys():
-            if "解锁" in result:
+            if "解锁" in result or "浏览页面10秒" in result:
                 is_browser_10s_area = ocr_result_dict[result]
+                break
             elif "拜访好友" in result:
                 is_visit_friend_area = ocr_result_dict[result]
-            elif "获得" in result:
+            elif "获得" in result and "恭喜获得" not in result:
                 if is_visit_friend_click_area is None:
                     is_visit_friend_click_area = ocr_result_dict[result]
             elif "猜个杯子" in result:
                 is_guess_cup = ocr_result_dict[result]
+                break
             elif "盲盒抽奖" in result:
                 is_blind_box = ocr_result_dict[result]
+                break
             elif "试试手气" in result:
                 is_blind_box_list.append(ocr_result_dict[result])
+                break
             elif "的金库" in result:
                 is_treasury = ocr_result_dict[result]
+                break
             elif "不足" in result:
                 is_not_roll_area = ocr_result_dict[result]
+                break
             elif "游戏" in result:
                 continue_game = ocr_result_dict[result]
+                break
             elif "确定" in result:
                 confirm = ocr_result_dict[result]
+                break
             elif "领取" in result:
                 receive = ocr_result_dict[result]
+                break
+            elif "买一份" in result:
+                buy_one = ocr_result_dict[result]
+                break
+
         if is_browser_10s_area:
             logger.info("执行浏览10s任务")
             click_area(*is_browser_10s_area)
@@ -150,7 +164,7 @@ def roll():
             sleep(2)
             continue
         if continue_game:
-            logger.info("被暴击狗盯上了，继续游戏")
+            logger.info("被拳击狗盯上了，继续游戏")
             click_area(*continue_game)
             sleep(11)
             key_event(KeyEvent.BACK)
@@ -164,7 +178,13 @@ def roll():
             logger.info("发现领取按钮，点击")
             click_area(*receive)
             continue
-        logger.info("匹配不到任务类型")
+        if buy_one:
+            logger.info("买一份弹窗，点击X关掉")
+            click_xy(537, 1897)
+            continue
+        else:
+            logger.info("匹配不到任务类型")
+            continue
 
 
 # 领奖励
@@ -172,6 +192,7 @@ def receive_rewards():
     logger.info("执行领取奖励任务")
     is_list_expand = False
     ocr_result_dict = picture_local_ocr(screenshot(temp_dir))
+    print(ocr_result_dict)
     for ocr in ocr_result_dict.keys():
         if "每日任务" in ocr:
             is_list_expand = True
@@ -198,10 +219,12 @@ def receive_rewards_detail():
             click_area(*ocr_result_dict[ocr])
             sleep(2)
             click_area(451, 1456, 629, 1553)
+            break
         elif "去浏览" in ocr:
             have_task_flag = True
             click_area(*ocr_result_dict[ocr])
             browser_10s()
+            break
     return have_task_flag
 
 

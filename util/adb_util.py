@@ -22,7 +22,6 @@ pkg_act_pattern = re.compile(".* (.*?)/(.*?) ", re.S)  # 获取包名和Activity
 chinese_pattern = re.compile("[\u4e00-\u9fa5]", re.S)  # 筛选中文的正则
 size_pattern = re.compile(r"(\d+)x(\d+)", re.S)  # 获取屏幕尺寸的正则
 bounds_pattern = re.compile(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]")  # 匹配控件区域的正则
-t = time.time()
 logger = default_logger()
 
 
@@ -208,7 +207,7 @@ def screenshot(save_dir=None):
     获取手机截图，先截图后拉取(一步达成的方法好像有权限问题)
     :return: 截图文件的完整路径
     """
-    sc_name = "%d.png" % (int(round(t * 1000)))
+    sc_name = "%d.png" % (int(round(time.time() * 1000)))
     start_cmd('adb shell screencap /sdcard/%s' % sc_name)
     sc_path = os.path.join(os.getcwd() if save_dir is None else save_dir, sc_name)
     start_cmd('adb pull /sdcard/%s %s' % (sc_name, sc_path))

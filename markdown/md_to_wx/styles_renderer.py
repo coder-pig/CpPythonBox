@@ -16,7 +16,7 @@ import mistune
 from jinja2 import Environment, FileSystemLoader
 from lxml import etree
 from mistune.plugins import plugin_table
-from markdown.md_to_wx.highlight.renderer_code import renderer_by_node
+from highlight.renderer_code import renderer_by_node
 
 
 # 表格单元格

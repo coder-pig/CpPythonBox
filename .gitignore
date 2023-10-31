@@ -118,9 +118,11 @@ ENV/
 /markdown/md_to_wx/article
 /markdown/md_to_wx/wash/in.html
 /markdown/md_to_wx/wash/out.html
+markdown/backups/output
 /media/download/output
 config.ini
 /auto/boss/output/
 /auto/boss/userData/
 /markdown/transform/local_md/
 /markdown/transform/origin_md
+/markdown/backups/zybl_backups.xlsx
