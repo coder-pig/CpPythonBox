@@ -126,3 +126,7 @@ config.ini
 /markdown/transform/local_md/
 /markdown/transform/origin_md
 /markdown/backups/zybl_backups.xlsx
+*/output
+*/input
+/media/subtitle_extract/input/
+/media/subtitle_extract/output/

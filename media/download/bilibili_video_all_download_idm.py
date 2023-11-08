@@ -76,8 +76,8 @@ def download_all_video():
 
 if __name__ == '__main__':
     init()
-    download_all_video()
-    # generate_mp4_by_ffmpeg()
+    # download_all_video()
+    generate_mp4_by_ffmpeg()
 
     # model = whisper.load_model("tiny")
     # result = model.transcribe("test.mp4", fp16=False, language="Chinese")

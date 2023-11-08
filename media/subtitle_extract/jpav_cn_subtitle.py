@@ -15,6 +15,7 @@ import ffmpeg
 # from transformers import pipeline
 import openai
 
+from config_getter import get_config
 from util.file_util import read_file_text_content, read_list_from_file
 
 # 定义输入和输出文件路径
@@ -29,7 +30,7 @@ def fetch_audio_from_video(video_path, audio_path):
 
 
 def translate_by_openai(content):
-    openai.api_key = "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"
+    openai.api_key = get_config('openai_token', 'openai')
     response = openai.Completion.create(
         engine="text-davinci-003",
         prompt="你是一个专业的翻译工作者，请将下面这段日文的段落翻译成中文：{}".format(content),
