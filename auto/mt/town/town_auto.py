@@ -30,8 +30,9 @@ def browser_10s():
 def visit_friend():
     sleep(3)
     while True:
-        click_area(478, 1696, 602, 1743)  # 点击骰子
+        click_xy(536, 1959)  # 点击骰子
         ocr_dict = picture_local_ocr(screenshot(temp_dir))
+        print(ocr_dict)
         for ocr in ocr_dict.keys():
             if "确定" in ocr:
                 click_area(*ocr_dict[ocr])
@@ -43,7 +44,7 @@ def visit_friend():
 # 猜个杯
 def guess_cup():
     sleep(8)
-    click_xy(546, 1300)
+    click_xy(532, 1384)
     sleep(4)
     ocr_dict = picture_local_ocr(screenshot(temp_dir))
     for ocr in ocr_dict.keys():
@@ -59,7 +60,7 @@ def blind_box(box_list):
         sleep(4)
         click_area(453, 1459, 628, 1555)
     sleep(2)
-    click_xy(927, 451)
+    click_xy(924, 531)
     sleep(3)
 
 
@@ -71,7 +72,7 @@ def treasury():
     sleep(2)
     click_xy(293, 1497)
     sleep(4)
-    click_area(451, 1458, 629, 1555)
+    click_xy(512, 1607)
     sleep(3)
 
 
@@ -79,7 +80,7 @@ def treasury():
 def roll():
     logger.info("投骰子~")
     while True:
-        click_area(478, 1696, 602, 1743)  # 点击骰子
+        click_xy(536, 1959)  # 点击骰子
         sleep(8)
         ocr_result_dict = picture_local_ocr(screenshot(temp_dir))
         print(ocr_result_dict)
@@ -97,7 +98,7 @@ def roll():
         receive = None
         buy_one = None
         for result in ocr_result_dict.keys():
-            if "解锁" in result or "浏览页面10秒" in result:
+            if "解锁奖励" in result or "浏览页面10秒" in result:
                 is_browser_10s_area = ocr_result_dict[result]
                 break
             elif "拜访好友" in result:
@@ -110,7 +111,6 @@ def roll():
                 break
             elif "盲盒抽奖" in result:
                 is_blind_box = ocr_result_dict[result]
-                break
             elif "试试手气" in result:
                 is_blind_box_list.append(ocr_result_dict[result])
                 break
@@ -135,6 +135,7 @@ def roll():
 
         if is_browser_10s_area:
             logger.info("执行浏览10s任务")
+            sleep(1)
             click_area(*is_browser_10s_area)
             browser_10s()
             continue

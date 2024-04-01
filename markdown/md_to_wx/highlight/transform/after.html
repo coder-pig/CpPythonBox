@@ -1,3 +1,49 @@
-pip uninstall whisper
-pip install openai-whisper
+<span class="hljs-keyword">import</span> json
+<span class="hljs-keyword">import</span> requests <span class="hljs-keyword">as</span> r
+
+<span class="hljs-comment"># 请求头</span>
+headers = {
+    <span class="hljs-string">&#x27;X-Apifox-Version&#x27;</span>: <span class="hljs-string">&#x27;2024-01-20&#x27;</span>,
+    <span class="hljs-string">&#x27;Authorization&#x27;</span>: <span class="hljs-string">&#x27;Bearer APS-xxx&#x27;</span>,
+    <span class="hljs-string">&#x27;User-Agent&#x27;</span>: <span class="hljs-string">&#x27;Apifox/1.0.0 (https://apifox.com)&#x27;</span>,
+    <span class="hljs-string">&#x27;Content-Type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>
+}
+
+
+<span class="hljs-comment"># 更新api接口</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">update_api</span>(<span class="hljs-params">project_id, api_id</span>):</span>
+    request_url = <span class="hljs-string">&quot;https://api.apifox.com/api/v1/projects/{}/http-apis/{}?locale=zh-CN&quot;</span>.<span class="hljs-built_in">format</span>(project_id, api_id)
+    <span class="hljs-comment"># 拉取接口信息</span>
+    resp = r.get(request_url, headers=headers)
+    data_json = resp.json()[<span class="hljs-string">&#x27;data&#x27;</span>]
+    <span class="hljs-comment"># 对下不变的参数</span>
+    put_data = {
+        <span class="hljs-string">&quot;tags&quot;</span>: data_json[<span class="hljs-string">&#x27;tags&#x27;</span>],
+        <span class="hljs-string">&quot;requestBody&quot;</span>: data_json[<span class="hljs-string">&#x27;requestBody&#x27;</span>],
+        <span class="hljs-string">&quot;parameters&quot;</span>: data_json[<span class="hljs-string">&#x27;parameters&#x27;</span>],
+        <span class="hljs-string">&quot;name&quot;</span>: data_json[<span class="hljs-string">&#x27;name&#x27;</span>],
+        <span class="hljs-string">&quot;description&quot;</span>: data_json[<span class="hljs-string">&#x27;description&#x27;</span>],
+        <span class="hljs-string">&quot;method&quot;</span>: data_json[<span class="hljs-string">&#x27;method&#x27;</span>],
+        <span class="hljs-string">&quot;path&quot;</span>: data_json[<span class="hljs-string">&#x27;path&#x27;</span>],
+        <span class="hljs-string">&quot;status&quot;</span>: data_json[<span class="hljs-string">&#x27;status&#x27;</span>],
+        <span class="hljs-string">&quot;projectId&quot;</span>: data_json[<span class="hljs-string">&#x27;projectId&#x27;</span>],
+        <span class="hljs-string">&quot;folderId&quot;</span>: data_json[<span class="hljs-string">&#x27;folderId&#x27;</span>],
+        <span class="hljs-string">&quot;auth&quot;</span>: data_json[<span class="hljs-string">&#x27;auth&#x27;</span>],
+        <span class="hljs-string">&quot;advancedSettings&quot;</span>: data_json[<span class="hljs-string">&#x27;advancedSettings&#x27;</span>],
+        <span class="hljs-string">&quot;responses&quot;</span>: data_json[<span class="hljs-string">&#x27;responses&#x27;</span>],
+    }
+    <span class="hljs-comment"># 请求聚合数据的新闻头条数据</span>
+    jh_resp = r.get(<span class="hljs-string">&quot;https://v.juhe.cn/toutiao/index&quot;</span>, params={<span class="hljs-string">&quot;key&quot;</span>: <span class="hljs-string">&quot;xxx&quot;</span>})
+    jh_json = jh_resp.text
+
+    <span class="hljs-comment"># 更新返回数据responseExamples对应的数据</span>
+    put_data[<span class="hljs-string">&#x27;responseExamples&#x27;</span>] = [{<span class="hljs-string">&#x27;name&#x27;</span>: <span class="hljs-string">&quot;成功示例&quot;</span>, <span class="hljs-string">&quot;ordering&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;data&quot;</span>: jh_json}]
+
+    <span class="hljs-comment"># 调用修改接口</span>
+    resp = r.put(request_url, headers=headers, json=put_data)
+    print(resp.text)    <span class="hljs-comment"># 输出：{&quot;success&quot;:true,&quot;data&quot;:null}</span>
+
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:
+    update_api(xxx, yyy)
 

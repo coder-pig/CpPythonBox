@@ -8,7 +8,6 @@
    Desc     : 艾薇中文字幕生成
 -------------------------------------------------
 """
-import math
 
 import ffmpeg
 # from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
@@ -16,7 +15,7 @@ import ffmpeg
 import openai
 
 from config_getter import get_config
-from util.file_util import read_file_text_content, read_list_from_file
+from util.file_util import read_file_text_content
 
 # 定义输入和输出文件路径
 input_file = 'test.mp4'

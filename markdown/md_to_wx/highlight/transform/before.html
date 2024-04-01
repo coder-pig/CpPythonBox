@@ -1,3 +1,49 @@
-pip uninstall whisper
-pip install openai-whisper
+import json
+import requests as r
+
+# 请求头
+headers = {
+    'X-Apifox-Version': '2024-01-20',
+    'Authorization': 'Bearer APS-xxx',
+    'User-Agent': 'Apifox/1.0.0 (https://apifox.com)',
+    'Content-Type': 'application/json'
+}
+
+
+# 更新api接口
+def update_api(project_id, api_id):
+    request_url = "https://api.apifox.com/api/v1/projects/{}/http-apis/{}?locale=zh-CN".format(project_id, api_id)
+    # 拉取接口信息
+    resp = r.get(request_url, headers=headers)
+    data_json = resp.json()['data']
+    # 对下不变的参数
+    put_data = {
+        "tags": data_json['tags'],
+        "requestBody": data_json['requestBody'],
+        "parameters": data_json['parameters'],
+        "name": data_json['name'],
+        "description": data_json['description'],
+        "method": data_json['method'],
+        "path": data_json['path'],
+        "status": data_json['status'],
+        "projectId": data_json['projectId'],
+        "folderId": data_json['folderId'],
+        "auth": data_json['auth'],
+        "advancedSettings": data_json['advancedSettings'],
+        "responses": data_json['responses'],
+    }
+    # 请求聚合数据的新闻头条数据
+    jh_resp = r.get("https://v.juhe.cn/toutiao/index", params={"key": "xxx"})
+    jh_json = jh_resp.text
+
+    # 更新返回数据responseExamples对应的数据
+    put_data['responseExamples'] = [{'name': "成功示例", "ordering": 1, "data": jh_json}]
+
+    # 调用修改接口
+    resp = r.put(request_url, headers=headers, json=put_data)
+    print(resp.text)    # 输出：{"success":true,"data":null}
+
+
+if __name__ == '__main__':
+    update_api(xxx, yyy)
 

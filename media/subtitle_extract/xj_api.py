@@ -5,7 +5,7 @@
    File     : xj_api.py
    Author   : CoderPig
    date     : 2023-11-06 16:10
-   Desc     : 调用录音转文字(迅捷)API获取字幕
+   Desc     : 调用录音转文字(迅捷) API获取字幕
 -------------------------------------------------
 """
 import hashlib
@@ -314,7 +314,7 @@ if __name__ == '__main__':
     is_dir_existed(mp3_save_dir)
     is_dir_existed(srt_save_dir)
     is_dir_existed(txt_save_dir)
-    video_file_list = search_all_file(xj_input_dir, ('.flv', '.mp4', '.ts'))
+    video_file_list = search_all_file(xj_input_dir, ('.flv', '.mp4', '.ts', '.m4a', ".mp3", ".wav"))
     if len(video_file_list) == 0:
         logger.info("未在此目录下发现视频文件：{}".format(xj_input_dir))
         exit(0)
@@ -324,7 +324,7 @@ if __name__ == '__main__':
         for pos, video_path in enumerate(video_file_list):
             logger.info("{} → {}".format(pos, video_path))
         logger.info("=" * 64)
-        choose_input = input("请输入要提取字幕的视频序号回车，如果要转换全部视频直接回车：")
+        choose_input = input("请输入要提取字幕的音视频序号回车，如果要转换全部视频直接回车：")
         file_choose_index = -1
         if len(choose_input) > 0:
             file_choose_index = int(choose_input)

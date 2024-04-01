@@ -109,8 +109,8 @@ ENV/
 /article/
 /styles/custom/
 /template/custom/
-/wash/in.html
-/wash/out.html
+/aigc/coze/wash/in.html
+/aigc/coze/wash/out.html
 /temp/
 /markdown/local_md/
 /markdown/origin_md/
