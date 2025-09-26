@@ -130,3 +130,4 @@ config.ini
 */input
 /media/subtitle_extract/input/
 /media/subtitle_extract/output/
+/markdown/md_to_wx/highlight/transform/

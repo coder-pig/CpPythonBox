@@ -1,49 +1,36 @@
-<span class="hljs-keyword">import</span> json
-<span class="hljs-keyword">import</span> requests <span class="hljs-keyword">as</span> r
+import requests_async as requests
 
-<span class="hljs-comment"># 请求头</span>
-headers = {
-    <span class="hljs-string">&#x27;X-Apifox-Version&#x27;</span>: <span class="hljs-string">&#x27;2024-01-20&#x27;</span>,
-    <span class="hljs-string">&#x27;Authorization&#x27;</span>: <span class="hljs-string">&#x27;Bearer APS-xxx&#x27;</span>,
-    <span class="hljs-string">&#x27;User-Agent&#x27;</span>: <span class="hljs-string">&#x27;Apifox/1.0.0 (https://apifox.com)&#x27;</span>,
-    <span class="hljs-string">&#x27;Content-Type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>
-}
-
-
-<span class="hljs-comment"># 更新api接口</span>
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">update_api</span>(<span class="hljs-params">project_id, api_id</span>):</span>
-    request_url = <span class="hljs-string">&quot;https://api.apifox.com/api/v1/projects/{}/http-apis/{}?locale=zh-CN&quot;</span>.<span class="hljs-built_in">format</span>(project_id, api_id)
-    <span class="hljs-comment"># 拉取接口信息</span>
-    resp = r.get(request_url, headers=headers)
-    data_json = resp.json()[<span class="hljs-string">&#x27;data&#x27;</span>]
-    <span class="hljs-comment"># 对下不变的参数</span>
-    put_data = {
-        <span class="hljs-string">&quot;tags&quot;</span>: data_json[<span class="hljs-string">&#x27;tags&#x27;</span>],
-        <span class="hljs-string">&quot;requestBody&quot;</span>: data_json[<span class="hljs-string">&#x27;requestBody&#x27;</span>],
-        <span class="hljs-string">&quot;parameters&quot;</span>: data_json[<span class="hljs-string">&#x27;parameters&#x27;</span>],
-        <span class="hljs-string">&quot;name&quot;</span>: data_json[<span class="hljs-string">&#x27;name&#x27;</span>],
-        <span class="hljs-string">&quot;description&quot;</span>: data_json[<span class="hljs-string">&#x27;description&#x27;</span>],
-        <span class="hljs-string">&quot;method&quot;</span>: data_json[<span class="hljs-string">&#x27;method&#x27;</span>],
-        <span class="hljs-string">&quot;path&quot;</span>: data_json[<span class="hljs-string">&#x27;path&#x27;</span>],
-        <span class="hljs-string">&quot;status&quot;</span>: data_json[<span class="hljs-string">&#x27;status&#x27;</span>],
-        <span class="hljs-string">&quot;projectId&quot;</span>: data_json[<span class="hljs-string">&#x27;projectId&#x27;</span>],
-        <span class="hljs-string">&quot;folderId&quot;</span>: data_json[<span class="hljs-string">&#x27;folderId&#x27;</span>],
-        <span class="hljs-string">&quot;auth&quot;</span>: data_json[<span class="hljs-string">&#x27;auth&#x27;</span>],
-        <span class="hljs-string">&quot;advancedSettings&quot;</span>: data_json[<span class="hljs-string">&#x27;advancedSettings&#x27;</span>],
-        <span class="hljs-string">&quot;responses&quot;</span>: data_json[<span class="hljs-string">&#x27;responses&#x27;</span>],
+async def main(args: Args) -&gt; Output:
+    category = args.params[&#x27;category&#x27;]
+    category_map = {
+        &#x27;综合&#x27;: &#x27;1&#x27;,
+        &#x27;后端&#x27;: &#x27;6809637769959178254&#x27;,
+        &#x27;前端&#x27;: &#x27;6809637767543259144&#x27;,
+        &#x27;Android&#x27;: &#x27;6809635626879549454&#x27;,
+        &#x27;iOS&#x27;: &#x27;6809635626661445640&#x27;,
+        &#x27;人工智能&#x27;: &#x27;6809637773935378440&#x27;,
+        &#x27;开发工具&#x27;: &#x27;6809637771511070734&#x27;,
+        &#x27;代码人生&#x27;: &#x27;6809637776263217160&#x27;,
+        &#x27;阅读&#x27;: &#x27;6809637772874219534&#x27;
     }
-    <span class="hljs-comment"># 请求聚合数据的新闻头条数据</span>
-    jh_resp = r.get(<span class="hljs-string">&quot;https://v.juhe.cn/toutiao/index&quot;</span>, params={<span class="hljs-string">&quot;key&quot;</span>: <span class="hljs-string">&quot;xxx&quot;</span>})
-    jh_json = jh_resp.text
+    # 检查分类是否有效
+    if category not in category_map:
+        raise ValueError(f&quot;无效的分类: {category}，有效分类为: {&#x27;, &#x27;.join(category_map.keys())}&quot;)
 
-    <span class="hljs-comment"># 更新返回数据responseExamples对应的数据</span>
-    put_data[<span class="hljs-string">&#x27;responseExamples&#x27;</span>] = [{<span class="hljs-string">&#x27;name&#x27;</span>: <span class="hljs-string">&quot;成功示例&quot;</span>, <span class="hljs-string">&quot;ordering&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;data&quot;</span>: jh_json}]
+    # 构建请求URL
+    category_id = category_map[category]
+    url = f&quot;https://api.juejin.cn/content_api/v1/content/article_rank?category_id={category_id}&amp;type=hot&amp;aid=2608&amp;spider=0&quot;
 
-    <span class="hljs-comment"># 调用修改接口</span>
-    resp = r.put(request_url, headers=headers, json=put_data)
-    print(resp.text)    <span class="hljs-comment"># 输出：{&quot;success&quot;:true,&quot;data&quot;:null}</span>
-
-
-<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:
-    update_api(xxx, yyy)
+    # 发送请求
+    headers = {
+        &#x27;User-Agent&#x27;: &#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36&#x27;
+    }
+    response = await requests.get(url, headers=headers)
+    response.raise_for_status()  # 如果响应状态码不是200，将引发HTTPError异常
+    data = response.json()
+    # 构建输出对象
+    ret: Output = {
+        &quot;result&quot;: data,
+    }
+    return ret
 

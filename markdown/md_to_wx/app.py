@@ -40,7 +40,7 @@ if __name__ == '__main__':
             file_name = split_list[-1]
             print("读取文件 →", file_name)
             file_content = read_file_text_content(md_file_path)
-            for theme_file_path in theme_file_path_list[3:]:
+            for theme_file_path in theme_file_path_list:
                 theme_name = theme_file_path.split(os.sep)[-1][:-4]
                 print("应用样式 →", theme_name)
                 renderer_content = render_article(file_content, theme_file_path, template_dir)

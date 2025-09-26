@@ -1,49 +1,36 @@
-import json
-import requests as r
+import requests_async as requests
 
-# 请求头
-headers = {
-    'X-Apifox-Version': '2024-01-20',
-    'Authorization': 'Bearer APS-xxx',
-    'User-Agent': 'Apifox/1.0.0 (https://apifox.com)',
-    'Content-Type': 'application/json'
-}
-
-
-# 更新api接口
-def update_api(project_id, api_id):
-    request_url = "https://api.apifox.com/api/v1/projects/{}/http-apis/{}?locale=zh-CN".format(project_id, api_id)
-    # 拉取接口信息
-    resp = r.get(request_url, headers=headers)
-    data_json = resp.json()['data']
-    # 对下不变的参数
-    put_data = {
-        "tags": data_json['tags'],
-        "requestBody": data_json['requestBody'],
-        "parameters": data_json['parameters'],
-        "name": data_json['name'],
-        "description": data_json['description'],
-        "method": data_json['method'],
-        "path": data_json['path'],
-        "status": data_json['status'],
-        "projectId": data_json['projectId'],
-        "folderId": data_json['folderId'],
-        "auth": data_json['auth'],
-        "advancedSettings": data_json['advancedSettings'],
-        "responses": data_json['responses'],
+async def main(args: Args) -> Output:
+    category = args.params['category']
+    category_map = {
+        '综合': '1',
+        '后端': '6809637769959178254',
+        '前端': '6809637767543259144',
+        'Android': '6809635626879549454',
+        'iOS': '6809635626661445640',
+        '人工智能': '6809637773935378440',
+        '开发工具': '6809637771511070734',
+        '代码人生': '6809637776263217160',
+        '阅读': '6809637772874219534'
     }
-    # 请求聚合数据的新闻头条数据
-    jh_resp = r.get("https://v.juhe.cn/toutiao/index", params={"key": "xxx"})
-    jh_json = jh_resp.text
+    # 检查分类是否有效
+    if category not in category_map:
+        raise ValueError(f"无效的分类: {category}，有效分类为: {', '.join(category_map.keys())}")
 
-    # 更新返回数据responseExamples对应的数据
-    put_data['responseExamples'] = [{'name': "成功示例", "ordering": 1, "data": jh_json}]
+    # 构建请求URL
+    category_id = category_map[category]
+    url = f"https://api.juejin.cn/content_api/v1/content/article_rank?category_id={category_id}&type=hot&aid=2608&spider=0"
 
-    # 调用修改接口
-    resp = r.put(request_url, headers=headers, json=put_data)
-    print(resp.text)    # 输出：{"success":true,"data":null}
-
-
-if __name__ == '__main__':
-    update_api(xxx, yyy)
+    # 发送请求
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    response = await requests.get(url, headers=headers)
+    response.raise_for_status()  # 如果响应状态码不是200，将引发HTTPError异常
+    data = response.json()
+    # 构建输出对象
+    ret: Output = {
+        "result": data,
+    }
+    return ret
 
