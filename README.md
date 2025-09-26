@@ -1,134 +1,152 @@
-# CpPythonBox
+# 🐍 CpPythonBox
 
-自用练手py脚本合集
+> 一个功能丰富的Python工具箱，包含自动化脚本、开发效率工具、数据处理、爬虫等多个实用模块 ✨
 
-## auto（自动化）
+## 📋 项目概述
 
-### boss（xx直聘）
+本项目是一个个人Python脚本合集，涵盖了日常开发和生活中的各种自动化需求：
+- 🤖 自动化操作脚本（招聘、游戏等）
+- 🛠️ 开发效率提升工具  
+- 📝 Markdown文档处理工具链
+- 🎥 多媒体内容处理
+- 🕷️ 各类网站数据爬取
+- 🔧 通用工具模块库
 
-**boss_adb.py**
+## 🚀 快速开始
 
-> 基于【adb命令】实现自动化爬取，解析页面xml提取岗位信息，需要APP打开搜索岗位列表页后再运行脚本
+### 环境要求
+- Python 3.8+
+- 依赖包：详见各模块的requirements
 
-**boss_spider.py**
+### 配置文件
+修改 `config.ini` 中的相关配置项：
+```ini
+[config]
+# 视频字幕提取相关配置
+video_subtitle_host = xxx
+bd_ocr_app_id = xxx
+bd_ocr_api_key = xxx
 
-> 基于【pyppeteer】实现自动化爬取xpath解析页面提取岗位信息，直接运行即可
+[openai]
+openai_token = xxx
+```
 
-**data_wash.py**
+## 📁 项目结构
+
+### 🤖 auto（自动化脚本）
 
-> 对爬取到的数据进行清洗，并生成Excel文件
+#### boss（招聘网站自动化）
+- **`boss_adb.py`** - 基于ADB命令的移动端自动化爬取，解析页面XML提取岗位信息
+- **`boss_spider.py`** - 基于Pyppeteer的PC端自动化爬取，XPath解析页面数据  
+- **`data_wash.py`** - 数据清洗工具，生成Excel分析报告
+
+#### mt（美团小游戏自动化）
+- **`sssf.py`** - 美团【谁是首富】孤岛求生自动跳桥脚本
+- **`sssf_all_auto.py`** - 美团【谁是首富】日常任务自动化
+- **`sssf_spring.py`** - 美团【谁是首富】春节对对联自动化
+- **`town_auto.py`** - 美团小镇自动投骰子脚本
 
-### mt（美团）
+### 🛠️ company（开发效率工具）
 
-**sssf.py**
+- **`fetch_api_table_data.py`** - 提取接口文档表格参数，输出格式：`var 字段名: 类型? = null`
+- **`generate_mock_data.py`** - 根据Kotlin实体类生成Mock测试数据（JSON格式）
+- **`generate_widget_object_by_xml.py`** - 解析XML布局生成Kotlin控件对象代码（支持DataBinding）
 
-> 美团小游戏【谁是首富】孤岛求生自动跳桥脚本
+### 📝 markdown（Markdown工具链）
 
-**sssf_all_auto.py**
+#### backups（文档备份工具）
+- **`yuque_md_local.py`** - 语雀文档批量导出为本地Markdown
+- **`zybl_md_local.py`** - 作业部落文档备份工具
+- **`backups_util.py`** - 通用备份工具类
 
-> 美团小游戏【谁是首富】日常任务脚本
+#### md_to_wx（微信公众号转换）
+- **`app.py`** - 将Markdown转换为微信公众号格式HTML
+- **`styles_renderer.py`** - 样式渲染器，支持多种主题
+- 📁 **styles/** - 预设样式模板库
+- 📁 **template/** - HTML模板文件
 
-**sssf_spring.py**
+#### transform（格式转换）
+- **`md_transform.py`** - Markdown文件本地化（图片下载+链接修复）+ DOC格式导出
 
-> 美团小游戏【谁是首富】春节自动对对联脚本
+#### url_style_fix（链接格式修正）
+- **`app.py`** - 批量修正Markdown中的图片链接格式
+- **`auto_to_list.py`** - 自动生成目录列表
 
-**town_auto.py**
+### 🎥 media（多媒体处理）
 
-> 美团小镇自动投骰子脚本
+#### download（视频下载）
+- **`video_download.py`** - 多平台视频下载器（支持you-get）
+- **`bilibili_video_all_download_idm.py`** - B站多P视频批量下载（IDM加速）
 
-## company（公司项目提高开发效率）
+#### subtitle_extract（字幕提取）
+- **`jpav_cn_subtitle.py`** - 视频字幕提取工具
+- **`xj_api.py`** - 字幕处理API接口
 
-**fetch_api_table_data.py**
+### 🕷️ spider（爬虫工具集）
 
-> 提取接口Wiki里的表格参数，转换输出：var 字段名: 类型? = null,
+#### apifox
+- **`apifox.py`** - Apifox接口文档动态更新工具
 
-**generate_mock_data.py**
+#### edu（教育资源）
+- **`xfz_spider.py`** - 自考题库数据爬取
+- **`data_wash.py`** - 教育数据清洗
 
-> 根据 Kotlin实体类代码 生成用于Mock的Response Data数据，使用方法如下：把Kotlin实体类的代码贴到【Kotlin实体类.txt】文件中，引用到的类型也要包含。然后直接生成json数据，json解析异常一般是漏了引用到的实体类，或者没有继承Serializable接口
+#### mall（电商数据）
+- **`mall_spider.py`** - 电商网站商品信息爬取
+- **`generate_category_file.py`** - 商品分类文件生成
 
-**generate_widget_object_by_xml.py**
+#### music（音乐平台）  
+- **`music_spider.py`** - 网易云音乐艺人粉丝数据爬取（含GUI界面）
 
-> 根据xml布局，生成Kotlin中可以直接调用的控件对象 (需要支持DataBinding)
-
-## markdown（Markdown相关）
-
-### md_to_wx（将md文件生成带特定样式的微信公号文章html）
-
-> 简单用法：把md文件丢到article/md目录下，运行app.py即可在article/out目录下生成html文件。 具体开发过程及使用方法可查阅：[hzwz-markdown](markdown/md_to_wx/README.md)
-
-### transform（md文件转换）
-
-**md_transform.py**
-
-> md文件本地化（就是图片下载到本地，修改原有图片指向），生成doc。使用方法：
-
-> 将要转换的md文件放到 origin_md 目录下，然后运行即可自动转换。如果用到生成doc的功能，需要电脑先安装一下pandoc，下载地址：https://github.com/jgm/pandoc/releases
-
-**zybl_xlsx_to_local_md.py**
-
-> cmd markdown(作业部落) 数据备份xlsx文件 批量生成本地MD文件的脚本
-
-
-### url_style_fix（url风格批量修正）
-
-**app.py**
-
-> 修正url风格，如：![][1] → ![](xxx)
-
-## media（多媒体）
-
-### download（视频下载）
-
-**video_download.py**
-
-> 视频下载，默认采用you_get下载，B站链接支持破解下载(requests或idm)
-
-### subtitle_extract
-
-**app.py**
-
-> 字幕提取工具，代码还未完成迁移~
-
-
-## spider（爬虫）
-
-### mall（某小电商站点）
-
-**mall_spider.py**
-
-> 某小站点的爬取示例
-
-
-## util（工具模块）
-
-**adb_util.py**
-
-> adb命令模块
-
-**download_util.py**
-
-> 下载模块
-
-**file_util.py**
-
-> 文件操作模块
-
-**logger_util.py**
-
-> 日志模块
-
-**ocr_util.py**
-
-> OCR文字识别模块
-
-**os_util.py**
-
-> 系统信息相关模块
-
-**pic_util.py**
-
-> 图片处理模块
-
-**pyppeteer_utils.py**
-
-> pyppeteer工具模块
+### 🔧 util（通用工具库）
+
+- **`adb_util.py`** - Android ADB命令封装
+- **`download_util.py`** - 文件下载工具（支持多线程、断点续传）
+- **`file_util.py`** - 文件操作工具集
+- **`logger_util.py`** - 日志记录工具
+- **`ocr_util.py`** - OCR文字识别（百度API）
+- **`os_util.py`** - 系统信息获取
+- **`pic_util.py`** - 图片处理工具
+- **`proxy_util.py`** - 代理设置工具
+- **`pyppeteer_utils.py`** - Pyppeteer浏览器自动化封装
+
+## 🔧 安装与使用
+
+1. **克隆项目**
+   ```bash
+   git clone <repository-url>
+   cd CpPythonBox
+   ```
+
+2. **安装依赖**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **配置设置**
+   - 复制 `config.ini.example` 为 `config.ini`
+   - 根据需要填写相关API密钥和配置项
+
+4. **运行脚本**
+   ```bash
+   python auto/boss/boss_spider.py
+   python markdown/md_to_wx/app.py
+   ```
+
+## 🎯 使用场景
+
+- **求职场景**：自动爬取招聘信息，批量分析岗位数据
+- **内容创作**：Markdown文档格式转换，微信公众号排版
+- **数据收集**：各类网站信息爬取和数据分析
+- **开发效率**：API文档处理，Mock数据生成
+- **多媒体处理**：视频下载，字幕提取
+
+## ⚠️ 注意事项
+
+- 使用爬虫工具时请遵守网站robots.txt和相关法律法规
+- 部分功能需要配置相应的API密钥
+- 建议在虚拟环境中运行，避免依赖冲突
+
+## 📄 许可证
+
+MIT License - 详见 [LICENSE](LICENSE) 文件
